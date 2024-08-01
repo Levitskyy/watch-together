@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from '../logo.svg'; // Укажите правильный путь к вашему изображению
+import logo from '../logo.svg';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,20 +13,21 @@ const Navbar = () => {
       <div className="container mx-auto px-4 py-2 flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <img src={logo} alt="Logo" className="h-10 w-10 filter invert" />
-          <a href="/" className="text-white text-2xl font-bold md:block">AnimeParty</a>
+          <a href="/" className="text-white text-2xl font-bold md:block">WatchParty</a>
         </div>
-        <div className="hidden md:flex space-x-6 items-center">
+        <div className="hidden xl:flex space-x-6 items-center">
           <a href="/" className="text-gray-300 hover:text-white transition duration-300">Главная</a>
-          <a href="/anime-list" className="text-gray-300 hover:text-white transition duration-300">Список аниме</a>
+          <a href="/series-list" className="text-gray-300 hover:text-white transition duration-300">Список сериалов</a>
+          <a href="/create-room" className="text-gray-300 hover:text-white transition duration-300">Создать комнату</a>
           <input
             type="text"
             placeholder="Поиск..."
-            className="hidden lg:block px-3 py-1 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-1 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <a href="/register" className="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-600 transition duration-300">Регистрация</a>
-          <a href="/login" className="bg-green-500 text-white px-4 py-1 rounded-md hover:bg-green-600 transition duration-300">Логин</a>
+          <a href="/register" className="bg-gray-800 text-white px-4 py-1 rounded-md border-2 hover:bg-gray-600 transition duration-300">Регистрация</a>
+          <a href="/login" className="bg-gray-100 text-black px-4 py-1 rounded-md border-2 border-gray-800 hover:bg-gray-300 transition duration-300">Войти</a>
         </div>
-        <div className="md:hidden">
+        <div className="xl:hidden">
           <button className="text-white hover:text-gray-300 focus:outline-none" onClick={toggleMenu}>
             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
@@ -35,16 +36,17 @@ const Navbar = () => {
         </div>
       </div>
       {isOpen && (
-        <div className="md:hidden flex flex-col items-center space-y-2">
+        <div className="xl:hidden flex flex-col items-left space-y-2">
           <a href="/" className="text-gray-300 hover:text-white transition duration-300">Главная</a>
           <a href="/anime-list" className="text-gray-300 hover:text-white transition duration-300">Список аниме</a>
+          <a href="/create-room" className="text-gray-300 hover:text-white transition duration-300">Создать комнату</a>
           <input
             type="text"
             placeholder="Поиск..."
             className="px-3 py-1 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <a href="/register" className="bg-blue-500 text-white px-4 py-1 rounded-md hover:bg-blue-600 transition duration-300">Регистрация</a>
-          <a href="/login" className="bg-green-500 text-white px-4 py-1 rounded-md hover:bg-green-600 transition duration-300">Логин</a>
+          <a href="/register" className="bg-gray-800 text-white px-4 py-1 rounded-md border-2 hover:bg-gray-600 transition duration-300">Регистрация</a>
+          <a href="/login" className="bg-gray-100 text-black px-4 py-1 rounded-md border-2 border-gray-800 hover:bg-gray-300 transition duration-300">Войти</a>
         </div>
       )}
     </nav>
