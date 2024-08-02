@@ -65,33 +65,37 @@ const SeriesList = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 bg-gray-200 rounded-lg shadow-md">
+    <div className="container mx-auto p-4 bg-gray-200 rounded-lg shadow-md min-h-screen">
       <h1 className="text-2xl font-bold mb-4">Series List</h1>
-      <div className="flex mb-4">
-        <input
-          type="text"
-          placeholder="Search by title"
-          value={search}
-          onChange={handleSearch}
-          className="border p-1 h-8 mr-2 flex-grow"
-        />
-        <Filter 
+      <div className="flex">
+        <div className="flex-grow mr-4">
+          <input
+            type="text"
+            placeholder="Search by title"
+            value={search}
+            onChange={handleSearch}
+            className="border p-1 h-8 mb-2 w-full"
+          />
+          <ul>
+            {series.map((serie) => (
+              <li key={serie.id} className="border p-2 mb-2">
+                <h2 className="text-xl font-bold">{serie.title}</h2>
+                <p>Genre: {serie.genre}</p>
+                <p>Year: {serie.year}</p>
+                <p>Rating: {serie.rating}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="w-1/3">
+          <Filter
             onGenreChange={handleGenreChange}
             onYearChange={handleYearRange}
             onRatingChange={handleMinRating}
             onApplyFilter={handleFilter}
-        />
+          />
+        </div>
       </div>
-      <ul>
-        {series.map((serie) => (
-          <li key={serie.id} className="border p-2 mb-2">
-            <h2 className="text-xl font-bold">{serie.title}</h2>
-            <p>Genre: {serie.genre}</p>
-            <p>Year: {serie.year}</p>
-            <p>Rating: {serie.rating}</p>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 };
