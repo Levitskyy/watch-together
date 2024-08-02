@@ -36,9 +36,9 @@ const Navbar = () => {
         </div>
       </div>
       {isOpen && (
-        <div className="xl:hidden flex flex-col items-left space-y-2">
+        <div className="xl:hidden flex flex-col items-left space-y-2 px-5 py-5">
           <a href="/" className="text-gray-300 hover:text-white transition duration-300">Главная</a>
-          <a href="/anime-list" className="text-gray-300 hover:text-white transition duration-300">Список аниме</a>
+          <a href="/anime-list" className="text-gray-300 hover:text-white transition duration-300">Список сериалов</a>
           <a href="/create-room" className="text-gray-300 hover:text-white transition duration-300">Создать комнату</a>
           <input
             type="text"
