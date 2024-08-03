@@ -1,13 +1,30 @@
 import React, { useState } from 'react';
 import 'rc-slider/assets/index.css';
 import Filter from '../components/Filter';
+import MovieCard from '../components/MovieCard';
 
 const seriesList = [
-  { id: 1, title: 'Game of Thrones', genre: 'Fantasy', year: 2011, rating: 9.3 },
-  { id: 2, title: 'Breaking Bad', genre: 'Drama', year: 2008, rating: 9.5 },
-  { id: 3, title: 'Stranger Things', genre: 'Sci-Fi', year: 2016, rating: 8.7 },
-  { id: 4, title: 'The Witcher', genre: 'Fantasy', year: 2019, rating: 8.2 },
-  { id: 5, title: 'Chernobyl', genre: 'Drama', year: 2019, rating: 9.4 },
+  {
+    title: 'Игра престолов',
+    genre: 'Фентези',
+    rating: '8.5',
+    description: 'Краткое описание фильма 1. Краткое описание фильма 1. Краткое описание фильма 1. Краткое описание фильма 1.',
+    previewImage: 'https://via.placeholder.com/318x564',
+  },
+  {
+    title: 'Сопрано',
+    genre: 'Драма',
+    rating: '7.8',
+    description: 'Краткое описание сериала 1.',
+    previewImage: 'https://via.placeholder.com/318x564',
+  },
+  {
+    title: 'Во все тяжкие 1',
+    genre: 'Экшн',
+    rating: '7.8',
+    description: 'Краткое описание сериала 1.',
+    previewImage: 'https://via.placeholder.com/318x564',
+  },
 ];
 
 const genres = ['Fantasy', 'Drama', 'Sci-Fi', 'Comedy', 'Action'];
@@ -77,12 +94,15 @@ const SeriesList = () => {
             className="border p-1 h-8 mb-2 w-full"
           />
           <ul>
-            {series.map((serie) => (
-              <li key={serie.id} className="border p-2 mb-2">
-                <h2 className="text-xl font-bold">{serie.title}</h2>
-                <p>Genre: {serie.genre}</p>
-                <p>Year: {serie.year}</p>
-                <p>Rating: {serie.rating}</p>
+            {series.map((serie, index) => (
+              <li key={serie.index} className="border p-2 mb-2">
+                <MovieCard
+                  title={serie.title}
+                  genre={serie.genre}
+                  rating={serie.rating}
+                  description={serie.description}
+                  previewImage={serie.previewImage}
+                />
               </li>
             ))}
           </ul>
