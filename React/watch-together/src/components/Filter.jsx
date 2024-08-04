@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
@@ -6,17 +6,14 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onApplyFilter }) 
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [yearRange, setYearRange] = useState([1900, 2023]);
   const [minRating, setMinRating] = useState(0);
+  const [genres, setGenres] = useState([]);
 
-  const genres = [
-    'Action',
-    'Comedy',
-    'Drama',
-    'Horror',
-    'Sci-Fi',
-    'Thriller',
-    'Romance',
-    'Adventure',
-  ];
+  useEffect(() => {
+    fetch('http://localhost:8000/movies/genres')
+      .then(response => response.json())
+      .then(data => setGenres(data))
+      .catch(error => console.error('Error fetching genres:', error));
+  }, []);
 
   const handleGenreChange = (event) => {
     const { value, checked } = event.target;

@@ -1,40 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'rc-slider/assets/index.css';
 import Filter from '../components/Filter';
 import MovieCard from '../components/MovieCard';
 
-const seriesList = [
-  {
-    title: 'Игра престолов',
-    genre: 'Фентези',
-    rating: '8.5',
-    description: 'Краткое описание фильма 1. Краткое описание фильма 1. Краткое описание фильма 1. Краткое описание фильма 1.',
-    previewImage: 'https://via.placeholder.com/318x564',
-  },
-  {
-    title: 'Сопрано',
-    genre: 'Драма',
-    rating: '7.8',
-    description: 'Краткое описание сериала 1.',
-    previewImage: 'https://via.placeholder.com/318x564',
-  },
-  {
-    title: 'Во все тяжкие 1',
-    genre: 'Экшн',
-    rating: '7.8',
-    description: 'Краткое описание сериала 1.',
-    previewImage: 'https://via.placeholder.com/318x564',
-  },
-];
-
-const genres = ['Fantasy', 'Drama', 'Sci-Fi', 'Comedy', 'Action'];
-
 const SeriesList = () => {
-  const [series, setSeries] = useState(seriesList);
+  const [series, setSeries] = useState([]);
   const [search, setSearch] = useState('');
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [yearRange, setYearRange] = useState([1900, 2023]);
   const [minRating, setMinRating] = useState(0);
+
+  useEffect(() => {
+    fetchSeries();
+  }, []);
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
@@ -56,29 +34,37 @@ const SeriesList = () => {
     filterSeries();
   };
 
+  const fetchSeries = async (params = {}) => {
+    try {
+      const url = new URL('http://localhost:8000/movies/');
+      Object.keys(params).forEach(key => {
+        if (params[key] !== undefined && params[key] !== null && params[key] !== '') {
+          if (Array.isArray(params[key])) {
+            params[key].forEach(value => url.searchParams.append(key, value));
+          } else {
+            url.searchParams.append(key, params[key]);
+          }
+        }
+      });
+
+      const response = await fetch(url.toString());
+      const data = await response.json();
+      setSeries(data);
+    } catch (error) {
+      console.error('Error fetching series:', error);
+    }
+  };
+
   const filterSeries = () => {
-    let filteredSeries = seriesList;
-    if (search) {
-      filteredSeries = filteredSeries.filter((serie) =>
-        serie.title.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-    if (selectedGenres.length > 0) {
-      filteredSeries = filteredSeries.filter((serie) =>
-        selectedGenres.includes(serie.genre)
-      );
-    }
-    if (yearRange) {
-      filteredSeries = filteredSeries.filter((serie) =>
-        serie.year >= yearRange[0] && serie.year <= yearRange[1]
-      );
-    }
-    if (minRating) {
-      filteredSeries = filteredSeries.filter((serie) =>
-        serie.rating >= minRating
-      );
-    }
-    setSeries(filteredSeries);
+    const params = {
+      title: search || undefined,
+      genres: selectedGenres.length > 0 ? selectedGenres : undefined,
+      min_year: yearRange[0],
+      max_year: yearRange[1],
+      min_rating: minRating,
+    };
+
+    fetchSeries(params);
   };
 
   return (
@@ -95,13 +81,13 @@ const SeriesList = () => {
           />
           <ul>
             {series.map((serie, index) => (
-              <li key={serie.index} className="border p-2 mb-2">
+              <li key={index} className="border p-2 mb-2">
                 <MovieCard
                   title={serie.title}
                   genre={serie.genre}
                   rating={serie.rating}
                   description={serie.description}
-                  previewImage={serie.previewImage}
+                  previewImage={'http://localhost:8000/' + serie.image_url}
                 />
               </li>
             ))}

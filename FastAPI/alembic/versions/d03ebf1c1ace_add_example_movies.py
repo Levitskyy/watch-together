@@ -52,26 +52,29 @@ def upgrade() -> None:
     # Добавление фильмов
     movie1 = Movie(
         title='Inception',
-        image_url='./img/inception.jpg',
-        stream_url='./movies/inception.mp4',
+        image_url='static/img/inception.jpg',
+        stream_url='static/movies/inception.mp4',
         rating=7.8,
         description='A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.',
+        year=2016,
         genres=[action, drama]
     )
     movie2 = Movie(
         title='The Dark Knight',
-        image_url='./img/dark_knight.jpg',
-        stream_url='./movies/dark_knight.mp4',
+        image_url='static/img/dark_knight.jpg',
+        stream_url='static/movies/dark_knight.mp4',
         rating=9.0,
         description='When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.',
-        genres=[action]
+        year=2005,
+        genres=[romance]
     )
     movie3 = Movie(
         title='The Sopranos',
-        image_url='./img/sopranos.jpg',
-        stream_url='./movies/sopranos.mp4',
+        image_url='static/img/sopranos.jpg',
+        stream_url='static/movies/sopranos.mp4',
         rating=9.5,
         description='When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.',
+        year=1999,
         genres=[action, drama]
     )
     session.add(movie1)

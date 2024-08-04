@@ -1,8 +1,8 @@
 from datetime import datetime, UTC
-from typing import Optional
-from sqlalchemy import Integer, Float, DateTime, String
-from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped
+from sqlalchemy import String
+from sqlalchemy.orm import mapped_column, Mapped
 from app.models.base import Base
+
 
 class User(Base):
     __tablename__ = 'users'
@@ -15,4 +15,3 @@ class User(Base):
     updated_at: Mapped[datetime] = mapped_column(nullable=False, default=datetime.now(UTC), onupdate=datetime.now(UTC))
 
     # Relationships
-    

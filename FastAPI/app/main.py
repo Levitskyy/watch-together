@@ -1,20 +1,29 @@
-from typing import Annotated, List, Tuple
-from fastapi import FastAPI, Depends, HTTPException, Query
+from fastapi import FastAPI, Depends
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from app import database
+from app.routers import movies
 from app.models.base import Base
-from app.models.user import User
-from app.models.movie import Genre, Movie
 
 app = FastAPI()
 
+origins = [
+    "http://localhost:3000",
+    "http://localhost:8000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.mount("/static", StaticFiles(directory='static'), name='static')
+
 Base.metadata.create_all(bind=database.engine)
 
-@app.get("/api/hello", status_code=200)
-async def say_hello(db: Session = Depends(database.get_db)) -> int:
-    user = User(username="Ivan", email="iv.levickiy@gmail.com", password_hash="123asd")
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-    return user.id
+app.include_router(movies.router, prefix='/movies', tags=['movies'])
