@@ -83,6 +83,7 @@ const SeriesList = () => {
             {series.map((serie, index) => (
               <li key={index} className="border p-2 mb-2">
                 <MovieCard
+                  id={serie.id}
                   title={serie.title}
                   genre={serie.genre}
                   rating={serie.rating}

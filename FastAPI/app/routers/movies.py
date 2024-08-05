@@ -49,3 +49,11 @@ async def get_genres(db: Session = Depends(get_db)) -> list[str]:
     genre_names = [genre.name for genre in genres]
     
     return genre_names
+
+@router.get("/{id}")
+async def get_movie(id: int, db: Session = Depends(get_db)) -> MovieSchema:
+    query = select(Movie)
+    query = query.where(Movie.id == id)
+    movie = db.scalar(query)
+
+    return movie
