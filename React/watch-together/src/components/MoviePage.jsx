@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactPlayer from 'react-player';
+import VideoPlayer from './VideoPlayer';
 
 const server = "http://localhost:8000/";
 
@@ -21,15 +22,16 @@ const MoviePage = ({ id, title, image_url, stream_url, rating, description, year
             <div className="flex flex-wrap mb-4">
               {genres.map((genre) => (
                 <span key={genre.id} className="bg-gray-200 text-gray-700 px-2 py-1 rounded mr-2 mb-2">
-                  {genre.name}
+                  {genre.name_ru}
                 </span>
               ))}
             </div>
+            <div className='flex gap-3'>
+              {/* <iframe src={stream_url} allow='fullscreen' width="1080px" height="720px"></iframe> */}
+              <VideoPlayer videoUrl={stream_url}/>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="mt-6 p-6 bg-white rounded-lg shadow-md">
-        <ReactPlayer url={server + stream_url} controls width="100%" height="auto" />
       </div>
     </div>
   );

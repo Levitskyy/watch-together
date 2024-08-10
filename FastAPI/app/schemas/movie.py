@@ -2,7 +2,8 @@ from pydantic import BaseModel
 
 
 class GenreBase(BaseModel):
-    name: str
+    name_en: str
+    name_ru: str
 
 
 class GenreCreate(GenreBase):
@@ -19,7 +20,7 @@ class Genre(GenreBase):
 class MovieBase(BaseModel):
     title: str
     image_url: str
-    stream_url: str
+    stream_url: str | None
     rating: float
     description: str
     year: int

@@ -13,7 +13,8 @@ class Genre(Base):
     __tablename__ = 'genres'
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(nullable=False, unique=True)
+    name_en: Mapped[str] = mapped_column(nullable=False, unique=True)
+    name_ru: Mapped[str] = mapped_column(nullable=False, unique=True)
 
     movies = relationship('Movie', secondary=movie_genre_association, back_populates='genres')
 
@@ -24,7 +25,7 @@ class Movie(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str] = mapped_column(nullable=False)
     image_url: Mapped[str]
-    stream_url: Mapped[str]
+    stream_url: Mapped[str | None]
     rating: Mapped[float]
     description: Mapped[str]
     year: Mapped[int]

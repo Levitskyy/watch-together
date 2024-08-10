@@ -29,19 +29,19 @@ def upgrade() -> None:
     # Добавление жанров
     genres = []
 
-    action = Genre(name="Экшн")
+    action = Genre(name_ru="Экшн", name_en="Action")
     genres.append(action)
 
-    drama = Genre(name="Драма")
+    drama = Genre(name_ru="Драма", name_en="Drama")
     genres.append(drama)
     
-    fantasy = Genre(name="Фентези")
+    fantasy = Genre(name_ru="Фентези", name_en="Fantasy")
     genres.append(fantasy)
 
-    romance = Genre(name="Романтика")
+    romance = Genre(name_ru="Романтика", name_en="Romance")
     genres.append(romance)
 
-    cartoon = Genre(name="Мультфильм")
+    cartoon = Genre(name_ru="Мультфильм", name_en="Cartoon")
     genres.append(cartoon)
 
     for i in genres:
@@ -53,7 +53,6 @@ def upgrade() -> None:
     movie1 = Movie(
         title='Inception',
         image_url='static/img/inception.jpg',
-        stream_url='static/movies/inception.mp4',
         rating=7.8,
         description='A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.',
         year=2016,
@@ -62,7 +61,6 @@ def upgrade() -> None:
     movie2 = Movie(
         title='The Dark Knight',
         image_url='static/img/dark_knight.jpg',
-        stream_url='static/movies/dark_knight.mp4',
         rating=9.0,
         description='When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.',
         year=2005,
@@ -71,7 +69,6 @@ def upgrade() -> None:
     movie3 = Movie(
         title='The Sopranos',
         image_url='static/img/sopranos.jpg',
-        stream_url='static/movies/sopranos.mp4',
         rating=9.5,
         description='When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.',
         year=1999,
