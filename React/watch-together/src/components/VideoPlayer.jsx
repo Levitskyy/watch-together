@@ -40,7 +40,7 @@ const VideoPlayer = ({ videoUrl }) => {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <KinoboxPlayer kinopoiskId={'325'}/>
+      <KinoboxPlayer kinopoiskId={'749374'}/>
       <div className="flex mt-4 space-x-4">
         <button
           onClick={handlePlayPause}

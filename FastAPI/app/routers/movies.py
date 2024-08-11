@@ -6,7 +6,7 @@ import logging
 
 from app.database import get_db
 from app.models.movie import Movie, Genre
-from app.schemas.movie import Movie as MovieSchema, Genre as GenreSchema
+from app.schemas.movie import Movie as MovieSchema, Genre as GenreSchema, GenreCreate
 
 from anime_parsers_ru import KodikParserAsync
 
@@ -54,6 +54,17 @@ async def get_genres(db: Annotated[Session, Depends(get_db)]) -> list[str]:
     genre_names = [genre.name_ru for genre in genres]
     
     return genre_names
+
+@router.post("/genres")
+async def post_genres(genre: GenreCreate, db: Annotated[Session, Depends(get_db)]) -> GenreSchema:
+    db_genre = Genre(
+        name_ru=genre.name_ru,
+        name_en=genre.name_en
+    )
+    db.add(db_genre)
+    db.commit()
+    db.refresh(db_genre)
+    return db_genre
 
 @router.get("/{id}")
 async def get_movie(id: int, db: Annotated[Session, Depends(get_db)]) -> MovieSchema:

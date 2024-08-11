@@ -7,11 +7,14 @@ from app import database
 from app.routers import movies
 from app.models.base import Base
 
-app = FastAPI()
+app = FastAPI(
+    root_path='/api'
+)
 
 origins = [
     "http://localhost:3000",
     "http://localhost:8000",
+    "http://localhost:80",
 ]
 
 app.add_middleware(

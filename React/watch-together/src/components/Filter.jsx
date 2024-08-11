@@ -9,7 +9,7 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onApplyFilter }) 
   const [genres, setGenres] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/movies/genres')
+    fetch('/api/movies/genres')
       .then(response => response.json())
       .then(data => setGenres(data))
       .catch(error => console.error('Error fetching genres:', error));

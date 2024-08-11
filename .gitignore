@@ -163,3 +163,5 @@ cython_debug/
 
 *.db
 FastAPI/static/movies/
+alembic/
+alembic.ini
