@@ -8,7 +8,9 @@
 2. Создать .env файл в папке FastAPI
 
 ```cd FastAPI && touch .env```
-    Содержимое .env:
+   
+Содержимое .env:
+
 ```
 POSTGRES_USER=user
 POSTGRES_PASSWORD=password
@@ -19,4 +21,5 @@ JWT_ALGORITHM=HS256
 ```
 
 3. Запуск приложения
-   ```docker compose sup --build```
+
+```docker compose sup --build```
