@@ -5,32 +5,18 @@
 
 ```git clone https://github.com/Levitskyy/watch-together.git```
 
-2. Переход в директорию React/watch-together
+2. Создать .env файл в папке FastAPI
 
-```cd React/watch-together```
+```cd FastAPI && touch .env```
+    Содержимое .env:
+```
+POSTGRES_USER=user
+POSTGRES_PASSWORD=password
+POSTGRES_DB=db
+DB_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+JWT_SECRET_KEY=secret
+JWT_ALGORITHM=HS256
+```
 
-3. Установка зависимостей
-
-```npm install```
-
-4. Запуск фронта
-
-  ```npm start```
-  
-5. Переход назад и создание виртуального окружения
-
-```cd ../../```
-```py -m venv env```
-
-6. Активация виртуального окружения
-
-```env/Scripts/activate```
-
-7. Установка зависимостей
-
-```pip install -r requirements.txt```
-
-8. Запуск бека
-
-```cd FastAPI```
-```uvicorn app.main:app --host "localhost" --port 8000```
+3. Запуск приложения
+   ```docker compose sup --build```
