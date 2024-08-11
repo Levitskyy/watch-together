@@ -22,4 +22,4 @@ JWT_ALGORITHM=HS256
 
 3. Запуск приложения
 
-```docker compose sup --build```
+```docker compose up --build```
