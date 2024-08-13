@@ -36,7 +36,7 @@ const SeriesList = () => {
 
   const fetchSeries = async (params = {}) => {
     try {
-      const url = new URL('http://localhost:8000/movies/');
+      const url = new URL('/api/movies/');
       Object.keys(params).forEach(key => {
         if (params[key] !== undefined && params[key] !== null && params[key] !== '') {
           if (Array.isArray(params[key])) {
@@ -88,7 +88,7 @@ const SeriesList = () => {
                   genre={serie.genre}
                   rating={serie.rating}
                   description={serie.description}
-                  previewImage={'http://localhost:8000/' + serie.image_url}
+                  previewImage={'/api/' + serie.image_url}
                 />
               </li>
             ))}

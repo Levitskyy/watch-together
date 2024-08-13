@@ -35,5 +35,12 @@ services:
     image: postgres:16
     env_file:
       - ./FastAPI/.env
+    ports:
+      - "5432:5432"
     networks:
       - dev
+    volumes:
+      - db_data:/var/lib/postgresql/db_data
+
+volumes:
+  db_data:

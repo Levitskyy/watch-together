@@ -1,22 +1,6 @@
 from pydantic import BaseModel
 
 
-class GenreBase(BaseModel):
-    name_en: str
-    name_ru: str
-
-
-class GenreCreate(GenreBase):
-    pass
-
-
-class Genre(GenreBase):
-    id: int
-
-    class ConfigDict:
-        from_attributes = True
-
-
 class MovieBase(BaseModel):
     title: str
     image_url: str
@@ -24,7 +8,7 @@ class MovieBase(BaseModel):
     rating: float
     description: str
     year: int
-    genres: list[Genre]
+    genres: list[str]
 
 
 class MovieCreate(MovieBase):
@@ -33,6 +17,24 @@ class MovieCreate(MovieBase):
 
 class Movie(MovieBase):
     id: int
+
+    class ConfigDict:
+        from_attributes = True
+
+class AnimeBase(BaseModel):
+    id: int
+    kodik_id: str | None
+    shikimori_id: str | None
+    title: str
+    title_en: str | None
+    year: int | None
+    anime_kind: str | None
+    description: str | None
+    poster_url: str | None
+    anime_genres: list[str]
+    shikimori_rating: float | None
+    minimal_age: int | None
+    anime_studios: list[str]
 
     class ConfigDict:
         from_attributes = True

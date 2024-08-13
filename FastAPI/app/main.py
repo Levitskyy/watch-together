@@ -2,13 +2,21 @@ from fastapi import FastAPI, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from contextlib import asynccontextmanager
 
 from app import database
-from app.routers import movies
+from app.routers import movies, users, animes
 from app.models.base import Base
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await database.init_db()
+    yield
+
+
 app = FastAPI(
-    root_path='/api'
+    root_path='/api',
+    lifespan=lifespan
 )
 
 origins = [
@@ -27,6 +35,7 @@ app.add_middleware(
 
 app.mount("/static", StaticFiles(directory='static'), name='static')
 
-Base.metadata.create_all(bind=database.engine)
 
 app.include_router(movies.router, prefix='/movies', tags=['movies'])
+app.include_router(users.router, prefix='/users', tags=['users'])
+app.include_router(animes.router, prefix='/animes', tags=['animes'])

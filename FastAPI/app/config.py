@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     POSTGRES_DB: str = ""
     JWT_SECRET_KEY: str = ""
     JWT_ALGORITHM: str = "HS256"
+    KODIK_TOKEN: str = ""
     model_config = SettingsConfigDict(env_file=".env")
 
 
