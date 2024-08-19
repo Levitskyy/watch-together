@@ -19,11 +19,13 @@ const AnimeList = () => {
   const [minRating, setMinRating] = useState(0);
   const [loading, setLoading] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
+  const [hasDataLeft, setHasDataLeft] = useState(true);
 
   const skipRef = useRef(0); // Используем useRef для хранения skip
   const limit = 20;
 
   const fetchAnimes = async (params = {}, append = false) => {
+    if (!hasDataLeft) {return};
     setIsFetching(true);
     try {
       const url = new URL(serverURL + 'api/animes/filter');
@@ -40,6 +42,11 @@ const AnimeList = () => {
       url.searchParams.append('skip', skipRef.current); // Используем значение из useRef
       const response = await fetch(url.toString());
       const data = await response.json();
+
+      if (data.length < limit) {
+        setHasDataLeft(false);
+      }
+
       setAnimes(prev => append ? [...prev, ...data] : data);
       skipRef.current += limit; // Обновляем skip в useRef только после успешного запроса
     } catch (error) {
@@ -51,6 +58,7 @@ const AnimeList = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     fetchAnimes();
     console.log("START ", skipRef.current);
   }, []);
@@ -73,6 +81,7 @@ const AnimeList = () => {
 
   const handleFilter = () => {
     skipRef.current = 0; // Сбрасываем skip при фильтрации
+    setHasDataLeft(true);
     fetchAnimes({
       title: search || undefined,
       genres: selectedGenres.length > 0 ? selectedGenres : undefined,
