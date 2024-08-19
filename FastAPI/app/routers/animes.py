@@ -73,11 +73,11 @@ async def search_anime_by_title(title: str,
     query = query.where(or_(Anime.title.ilike(f"%{title}%"), Anime.title_en.ilike(f"%{title}%")))
     
     if order_by == 'rating':
-        query = query.order_by(Anime.shikimori_rating.asc() if asc else Anime.shikimori_rating.desc())
+        query = query.order_by(Anime.shikimori_rating.asc() if asc else Anime.shikimori_rating.desc(), Anime.id.asc())
     elif order_by == 'year':
-        query = query.order_by(Anime.year.asc() if asc else Anime.year.desc())
+        query = query.order_by(Anime.year.asc() if asc else Anime.year.desc(), Anime.id.asc())
     elif order_by == 'title':
-        query = query.order_by(Anime.title.asc() if asc else Anime.title.desc())
+        query = query.order_by(Anime.title.asc() if asc else Anime.title.desc(), Anime.id.asc())
     
     query = query.limit(limit).offset(skip)
     animes = await db.execute(query)
