@@ -39,7 +39,7 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onApplyFilter }) 
   };
 
   return (
-    <div className="p-4 bg-white rounded shadow max-w-96">
+    <div className="w-full md:w-1/3 bg-neutral-800 rounded-lg shadow-md p-4">
       <h2 className="text-2xl font-bold mb-4">Filter Movies and TV Shows</h2>
 
       <div className="mb-4">
@@ -66,6 +66,9 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onApplyFilter }) 
           max={2023}
           value={yearRange}
           onChange={handleYearChange}
+          trackStyle={{ backgroundColor: '#3b82f6' }}
+          handleStyle={{ borderColor: '#3b82f6' }}
+          railStyle={{ backgroundColor: '#1f2937' }}
         />
         <div className="flex justify-between mt-2">
           <span>{yearRange[0]}</span>
@@ -80,6 +83,9 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onApplyFilter }) 
           max={10}
           value={minRating}
           onChange={handleRatingChange}
+          trackStyle={{ backgroundColor: '#3b82f6' }}
+          handleStyle={{ borderColor: '#3b82f6' }}
+          railStyle={{ backgroundColor: '#1f2937' }}
         />
         <div className="mt-2">{minRating}</div>
       </div>

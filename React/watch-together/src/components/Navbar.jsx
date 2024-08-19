@@ -9,7 +9,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-900 shadow-md">
+    <nav className="bg-neutral-800 shadow-md">
       <div className="container mx-auto px-4 py-2 flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <img src={logo} alt="Logo" className="h-10 w-10 filter invert" />
@@ -24,8 +24,8 @@ const Navbar = () => {
             placeholder="Поиск..."
             className="px-3 py-1 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <a href="/register" className="bg-gray-800 text-white px-4 py-1 rounded-md border-2 hover:bg-gray-600 transition duration-300">Зарегистрироваться</a>
-          <a href="/login" className="bg-gray-100 text-black px-4 py-1 rounded-md border-2 border-gray-800 hover:bg-gray-300 transition duration-300">Войти</a>
+          <a href="/register" className="bg-neutral-800 text-white px-4 py-1 rounded-md border-2 hover:bg-neutral-600 transition duration-300">Зарегистрироваться</a>
+          <a href="/login" className="bg-neutral-100 text-black px-4 py-1 rounded-md border-2 border-gray-800 hover:bg-neutral-300 transition duration-300">Войти</a>
         </div>
         <div className="xl:hidden">
           <button className="text-white hover:text-gray-300 focus:outline-none" onClick={toggleMenu}>
@@ -45,8 +45,8 @@ const Navbar = () => {
             placeholder="Поиск..."
             className="px-3 py-1 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <a href="/register" className="bg-gray-800 text-white px-4 py-1 rounded-md border-2 hover:bg-gray-600 transition duration-300">Зарегистрироваться</a>
-          <a href="/login" className="bg-gray-100 text-black px-4 py-1 rounded-md border-2 border-gray-800 hover:bg-gray-300 transition duration-300">Войти</a>
+          <a href="/register" className="bg-neutral-800 text-white px-4 py-1 rounded-md border-2 hover:bg-neutral-600 transition duration-300">Зарегистрироваться</a>
+          <a href="/login" className="bg-neutral-100 text-black px-4 py-1 rounded-md border-2 border-gray-800 hover:bg-neutral-300 transition duration-300">Войти</a>
         </div>
       )}
     </nav>

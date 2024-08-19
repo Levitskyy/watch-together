@@ -7,10 +7,13 @@ from contextlib import asynccontextmanager
 from app import database
 from app.routers import movies, users, animes
 from app.models.base import Base
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.inmemory import InMemoryBackend
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await database.init_db()
+    FastAPICache.init(InMemoryBackend())
     yield
 
 
