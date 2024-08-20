@@ -153,7 +153,7 @@ const AnimeList = () => {
       ) : (
         <div className="container mx-auto p-4 flex flex-col md:flex-row gap-4 w-8/12">
           <div className="flex-grow bg-neutral-800 rounded-lg shadow-md p-4 min-h-screen pr-4">
-            <h1 className="text-2xl font-bold mb-2">Каталог</h1>
+            <h1 className="text-2xl text-neutral-400 mb-3">Каталог</h1>
             <div className="relative flex mb-2">
               <input
                 type="text"
