@@ -10,6 +10,7 @@ from app.schemas.movie import AnimeBase
 import requests
 import logging
 from fastapi_cache.decorator import cache
+from app.utils import search
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -104,9 +105,12 @@ async def filter_anime(
 ) -> list[AnimeBase]:
     query = select(Anime)
 
+    title_queries = search.create_search_queries(title)
     # Фильтрация по названию
-    if title:
-        query = query.where(or_(Anime.title.ilike(f"%{title}%"), Anime.title_en.ilike(f"%{title}%")))
+    if title_queries:
+        ru_q = [Anime.title.ilike(f"%{q_title}%") for q_title in title_queries]
+        en_q = [Anime.title_en.ilike(f"%{q_title}%") for q_title in title_queries]
+        query = query.where(or_(*ru_q, *en_q))
     
     # Фильтрация по жанрам
     if genres:

@@ -15,13 +15,17 @@ const AnimeList = () => {
   const [animes, setAnimes] = useState([]);
   const [search, setSearch] = useState('');
   const [selectedGenres, setSelectedGenres] = useState([]);
-  const [yearRange, setYearRange] = useState([1900, 2023]);
+  const [yearRange, setYearRange] = useState([1900, 2025]);
   const [minRating, setMinRating] = useState(0);
+  const [kind, setKind] = useState(null);
+  const [minAge, setMinAge] = useState(0);
+  const [strictGenres, setStrictGenres] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
   const [hasDataLeft, setHasDataLeft] = useState(true);
+  const [sortOption, setSortOption] = useState('');
 
-  const skipRef = useRef(0); // Используем useRef для хранения skip
+  const skipRef = useRef(0);
   const limit = 20;
 
   const fetchAnimes = async (params = {}, append = false) => {
@@ -38,8 +42,24 @@ const AnimeList = () => {
           }
         }
       });
+      // Extract order_by and asc values from sortOption
+      let order_by = '';
+      let asc = '';
+      if (sortOption) {
+        const [field, direction] = sortOption.split('_');
+        order_by = field;
+        asc = direction === 'asc';
+      }
+
       url.searchParams.append('limit', limit);
-      url.searchParams.append('skip', skipRef.current); // Используем значение из useRef
+      url.searchParams.append('skip', skipRef.current);
+      
+      if (order_by !== undefined && order_by !== null && order_by !== '') {
+        if (asc !== undefined && asc !== null && asc !== '') {
+          url.searchParams.append('order_by', order_by);
+          url.searchParams.append('asc', asc);
+        }       
+      }
       const response = await fetch(url.toString());
       const data = await response.json();
 
@@ -48,7 +68,7 @@ const AnimeList = () => {
       }
 
       setAnimes(prev => append ? [...prev, ...data] : data);
-      skipRef.current += limit; // Обновляем skip в useRef только после успешного запроса
+      skipRef.current += limit;
     } catch (error) {
       console.error('Error fetching animes:', error);
     } finally {
@@ -60,7 +80,6 @@ const AnimeList = () => {
   useEffect(() => {
     setLoading(true);
     fetchAnimes();
-    console.log("START ", skipRef.current);
   }, []);
 
   const handleSearch = (e) => {
@@ -72,15 +91,32 @@ const AnimeList = () => {
   };
 
   const handleYearRange = (value) => {
-    setYearRange(value);
+    setYearRange(prevYearRange => {
+      const newYearRange = [...prevYearRange];
+      newYearRange[value.id] = value.value;
+      return newYearRange;
+    });
+    
   };
 
   const handleMinRating = (value) => {
     setMinRating(value);
   };
 
+  const handleKindChange = (value) => {
+    setKind(value);
+  };
+
+  const handleMinAgeChange = (value) => {
+    setMinAge(value);
+  };
+
+  const handleStrictGenresChange = (value) => {
+    setStrictGenres(value);
+  }
+
   const handleFilter = () => {
-    skipRef.current = 0; // Сбрасываем skip при фильтрации
+    skipRef.current = 0;
     setHasDataLeft(true);
     fetchAnimes({
       title: search || undefined,
@@ -88,6 +124,9 @@ const AnimeList = () => {
       min_year: yearRange[0],
       max_year: yearRange[1],
       min_rating: minRating,
+      anime_kind: kind,
+      minimal_age: minAge,
+      genres_and: strictGenres
     });
   };
 
@@ -100,7 +139,6 @@ const AnimeList = () => {
       max_year: yearRange[1],
       min_rating: minRating,
     }, true);
-    console.log("SCROLL ", skipRef.current);
   };
 
   useEffect(() => {
@@ -137,6 +175,18 @@ const AnimeList = () => {
                   <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
               </div>
+              <select
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value)}
+                className="border p-1 h-8 bg-neutral-800 text-white rounded-md ml-2"
+              >
+                <option value="rating_desc">Рейтинг (по убыванию)</option>
+                <option value="rating_asc">Рейтинг (по возрастанию)</option>
+                <option value="year_desc">Год (по убыванию)</option>
+                <option value="year_asc">Год (по возрастанию)</option>
+                <option value="title_desc">Название (по убыванию)</option>
+                <option value="title_asc">Название (по возрастанию)</option>
+              </select>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4">
               {animes.map((anime, index) => (
@@ -156,6 +206,9 @@ const AnimeList = () => {
             onGenreChange={handleGenreChange}
             onYearChange={handleYearRange}
             onRatingChange={handleMinRating}
+            onKindChange={handleKindChange}
+            onMinAgeChange={handleMinAgeChange}
+            onStrictGenresChange={handleStrictGenresChange}
             onApplyFilter={handleFilter}
           />
         </div>
