@@ -14,5 +14,3 @@ def create_search_queries(input_string: str | None) -> list[str] | None:
     search_variants.append(variant2)
     # Возвращаем список новых вариантов запроса
     return search_variants
-
-print(create_search_queries('атака-титанов'))

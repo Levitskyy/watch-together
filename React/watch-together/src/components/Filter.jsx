@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import 'rc-slider/assets/index.css';
+import { replaceAnimeType } from './AnimeCard';
 
 const serverURL = 'http://localhost:8000/';
 
@@ -120,7 +121,7 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onKindChange, onM
         <>
           <div className="flex justify-between items-center mb-4 border-b pb-2 border-slate-500">
             <button
-                className="bg-neutral-800 text-white py-2 px-4 rounded hover:bg-neutral-600 transition duration-300"
+                className="bg-neutral-800 text-white py-2 px-4 rounded hover:bg-neutral-600 transition duration-300 w-full max-w-28"
                 onClick={() => setShowGenresList(true)}
               >
                 <div className="flex justify-left items-center gap-1">
@@ -142,15 +143,15 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onKindChange, onM
             </div>
           </div>
 
-          <div className="mb-4">
-            <h3 className="text-lg font-semibold mb-2">Year Range</h3>
-            <div className="flex items-center">
+          <div className="mb-4 border-b pb-4 border-slate-500">
+          <span className="text-neutral-400 text-base">Год релиза</span>
+            <div className="flex items-center mt-3">
               <input
                 type="text"
                 name="min"
                 value={yearRange.min}
                 onChange={handleYearChange}
-                className="border bg-neutral-800 text-white rounded-md p-2 mr-2 w-20"
+                className="border bg-neutral-800 text-neutral-400 text-base rounded-md p-2 mr-2 max-w-20 w-full"
               />
               <span>-</span>
               <input
@@ -158,55 +159,56 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onKindChange, onM
                 name="max"
                 value={yearRange.max}
                 onChange={handleYearChange}
-                className="border bg-neutral-800 text-white rounded-md p-2 ml-2 w-20"
+                className="border bg-neutral-800 text-neutral-400 text-base rounded-md p-2 ml-2 max-w-20 w-full"
               />
             </div>
           </div>
 
-          <div className="mb-4">
-            <h3 className="text-lg font-semibold mb-2">Minimum Rating</h3>
+          <div className="mb-4 border-b pb-4 border-slate-500">
+            <span className="text-neutral-400 text-base">Минимальный рейтинг</span>
             <input
               type="range"
               min="0"
               max="10"
               value={minRating}
               onChange={(e) => handleRatingChange(e.target.value)}
-              className="w-full"
+              className="w-full mt-2 transparent appearance-none accent-green-500 rounded cursor-pointer border-transparent bg-neutral-700"
             />
-            <div className="mt-2">{minRating}</div>
+            <div className="mt-2 text-neutral-400 text-base">{minRating}</div>
           </div>
 
-          <div className="mb-4">
-            <h3 className="text-lg font-semibold mb-2">Kind</h3>
+          <div className="mb-4 flex flex-col gap-2 items-left border-b pb-6 border-slate-500">
+            <span className="text-neutral-400 text-base">Тип аниме</span>
             <select
               value={selectedKind}
               onChange={handleKindChange}
-              className="border p-1 h-8 bg-neutral-800 text-white rounded-md ml-2"
+              className="border p-1 h-8 bg-neutral-800 text-neutral-400 text-base rounded-md"
             >
-              <option value="">Select a kind</option>
+              <option value="" className="text-neutral-400 text-base">Любой</option>
               {kinds.map((kind) => (
-                <option key={kind} value={kind}>
-                  {kind}
+                <option key={kind} value={kind}
+                className="text-neutral-400 text-base">
+                  {replaceAnimeType(kind)}
                 </option>
               ))}
             </select>
           </div>
 
-          <div className="mb-4">
-            <h3 className="text-lg font-semibold mb-2">Minimum Age</h3>
+          <div className="mb-4 flex flex-col gap-2 items-left border-b pb-6 border-slate-500">
+            <span className="text-neutral-400 text-base">Минимальный возраст</span>
             <input
               type="number"
               value={minAge}
               onChange={handleMinAgeChange}
-              className="bg-neutral-800 text-white rounded-md p-2 w-20"
+              className="bg-neutral-800 text-neutral-400 text-base rounded-md p-2 w-20"
             />
           </div>
 
           <button
-            className="bg-blue-500 text-white py-2 px-4 rounded"
+            className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-400 transition duration-300"
             onClick={applyFilters}
           >
-            Apply Filters
+            Применить
           </button>
         </>
       )}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const replaceAnimeType = (animeType) => {
+export const replaceAnimeType = (animeType) => {
   const animeTypes = {
     tv: 'Телесериал',
     tv_special: 'TV-Спешл',

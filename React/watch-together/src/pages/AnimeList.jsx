@@ -22,14 +22,18 @@ const AnimeList = () => {
   const [strictGenres, setStrictGenres] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isFetching, setIsFetching] = useState(false);
-  const [hasDataLeft, setHasDataLeft] = useState(true);
+  const [hasDataLeft, setHasDataLeft] = useState({value: true});
   const [sortOption, setSortOption] = useState('');
 
   const skipRef = useRef(0);
   const limit = 20;
 
   const fetchAnimes = async (params = {}, append = false) => {
-    if (!hasDataLeft) {return};
+    console.log("FETCH IN");
+    if (!hasDataLeft.value) {
+      console.log("NO DATA");
+      return
+    };
     setIsFetching(true);
     try {
       const url = new URL(serverURL + 'api/animes/filter');
@@ -64,7 +68,7 @@ const AnimeList = () => {
       const data = await response.json();
 
       if (data.length < limit) {
-        setHasDataLeft(false);
+        setHasDataLeft({value: false});
       }
 
       setAnimes(prev => append ? [...prev, ...data] : data);
@@ -81,6 +85,21 @@ const AnimeList = () => {
     setLoading(true);
     fetchAnimes();
   }, []);
+
+  useEffect(() => {
+    if (hasDataLeft.value) {  // После того как hasDataLeft обновился на true, запускаем fetchAnimes
+        fetchAnimes({
+            title: search || undefined,
+            genres: selectedGenres.length > 0 ? selectedGenres : undefined,
+            min_year: yearRange[0],
+            max_year: yearRange[1],
+            min_rating: minRating,
+            anime_kind: kind,
+            minimal_age: minAge,
+            genres_and: strictGenres
+        });
+    }
+}, [hasDataLeft]);
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
@@ -116,18 +135,9 @@ const AnimeList = () => {
   }
 
   const handleFilter = () => {
+    console.log("PRESSED");
     skipRef.current = 0;
-    setHasDataLeft(true);
-    fetchAnimes({
-      title: search || undefined,
-      genres: selectedGenres.length > 0 ? selectedGenres : undefined,
-      min_year: yearRange[0],
-      max_year: yearRange[1],
-      min_rating: minRating,
-      anime_kind: kind,
-      minimal_age: minAge,
-      genres_and: strictGenres
-    });
+    setHasDataLeft({value: true});
   };
 
   const handleScroll = () => {
@@ -178,14 +188,14 @@ const AnimeList = () => {
               <select
                 value={sortOption}
                 onChange={(e) => setSortOption(e.target.value)}
-                className="border p-1 h-8 bg-neutral-800 text-white rounded-md ml-2"
+                className="border p-1 h-8 bg-neutral-800 text-neutral-400 text-base rounded-md ml-2"
               >
-                <option value="rating_desc">Рейтинг (по убыванию)</option>
-                <option value="rating_asc">Рейтинг (по возрастанию)</option>
-                <option value="year_desc">Год (по убыванию)</option>
-                <option value="year_asc">Год (по возрастанию)</option>
-                <option value="title_desc">Название (по убыванию)</option>
-                <option value="title_asc">Название (по возрастанию)</option>
+                <option value="rating_desc" className="text-neutral-400 text-base">Рейтинг (по убыванию)</option>
+                <option value="rating_asc" className="text-neutral-400 text-base">Рейтинг (по возрастанию)</option>
+                <option value="year_desc" className="text-neutral-400 text-base">Год (по убыванию)</option>
+                <option value="year_asc" className="text-neutral-400 text-base">Год (по возрастанию)</option>
+                <option value="title_desc" className="text-neutral-400 text-base">Название (по убыванию)</option>
+                <option value="title_asc" className="text-neutral-400 text-base">Название (по возрастанию)</option>
               </select>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4">
