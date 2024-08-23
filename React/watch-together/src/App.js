@@ -8,8 +8,8 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Login from './pages/Login';
-import Movie from './pages/Movie';
 import AnimeList from './pages/AnimeList';
+import AnimePage from './pages/AnimePage';
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
         <Route path="/series-list" element={<AnimeList />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/movies/:id" Component={Movie} />
+        <Route path="/anime/:id" Component={AnimePage} />
       </Routes>
     </Router>
   );

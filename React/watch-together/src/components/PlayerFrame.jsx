@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-const VideoPlayer = ({ videoUrl }) => {
+const PlayerFrame = ({ animeId }) => {
   
 };
 
-export default VideoPlayer;
+export default PlayerFrame;

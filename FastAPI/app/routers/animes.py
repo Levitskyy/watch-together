@@ -11,6 +11,8 @@ import requests
 import logging
 from fastapi_cache.decorator import cache
 from app.utils import search
+import asyncio
+import aiohttp
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -191,7 +193,7 @@ async def get_all_kinds(db: Annotated[AsyncSession, Depends(get_db)]) -> list[st
 #         return 'Failed to delete'
 #     else:
 #         return 'Deleted succesfully'
-    
+
 @router.get('/{id}')
 async def get_anime(id: int, db: Annotated[AsyncSession, Depends(get_db)]) -> AnimeBase:
     query = select(Anime)

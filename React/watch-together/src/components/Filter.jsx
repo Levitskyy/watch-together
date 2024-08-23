@@ -44,7 +44,7 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onKindChange, onM
   const [minAge, setMinAge] = useState(0);
   const [genres, setGenres] = useState([]);
   const [kinds, setKinds] = useState([]);
-  const [selectedKind, setSelectedKind] = useState(null);
+  const [selectedKind, setSelectedKind] = useState("");
   const [strictGenres, setStrictGenres] = useState(false);
   const [showGenresList, setShowGenresList] = useState(false);
 
@@ -109,7 +109,7 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onKindChange, onM
   };
 
   return (
-    <div className="w-full md:w-1/3 bg-neutral-800 text-white rounded-lg shadow-md p-4">
+    <div className="w-full md:w-1/4 bg-neutral-800 text-white rounded-lg shadow-md p-4">
       {showGenresList ? (
         <GenresList
           genres={genres}
@@ -126,7 +126,7 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onKindChange, onM
               >
                 <div className="flex justify-left items-center gap-1">
                   <span className="text-neutral-400 text-base">Жанры</span>
-                  <svg className="h-2 w-2 flex-no-shrink fill-current" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path class="" fill="currentColor" d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"></path></svg>
+                  <svg className="h-2 w-2 flex-no-shrink fill-current" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path className="" fill="currentColor" d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"></path></svg>
                 </div>
                 
             </button>

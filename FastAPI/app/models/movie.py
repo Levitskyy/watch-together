@@ -19,3 +19,8 @@ class Anime(Base):
     shikimori_rating: Mapped[float | None]
     minimal_age: Mapped[int | None]
     anime_studios: Mapped[list[str]] = mapped_column(ARRAY(String))
+    shikimori_votes: Mapped[int | None]
+    status: Mapped[str | None]
+    released_episodes: Mapped[int | None]
+    total_episodes: Mapped[int | None]
+    other_titles: Mapped[list[str] | None] = mapped_column(ARRAY(String))
