@@ -48,13 +48,22 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onKindChange, onM
   const [strictGenres, setStrictGenres] = useState(false);
   const [showGenresList, setShowGenresList] = useState(false);
 
+
+ 
+
   useEffect(() => {
-    fetch(serverURL + 'api/animes/genres')
+    const headers = new Headers({
+      // 'Access-Control-Allow-Origin': '*',
+      // 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      // 'Access-Control-Allow-Headers': 'Content-Type'
+    });
+
+    fetch(serverURL + 'api/animes/genres', { headers })
       .then((response) => response.json())
       .then((data) => setGenres(data))
       .catch((error) => console.error('Error fetching genres:', error));
 
-    fetch(serverURL + 'api/animes/kinds')
+    fetch(serverURL + 'api/animes/kinds', { headers })
       .then((response) => response.json())
       .then((data) => setKinds(data))
       .catch((error) => console.error('Error fetching kinds:', error));

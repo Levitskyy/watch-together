@@ -1,29 +1,8 @@
 from pydantic import BaseModel
-
-
-class MovieBase(BaseModel):
-    title: str
-    image_url: str
-    stream_url: str | None
-    rating: float
-    description: str
-    year: int
-    genres: list[str]
-
-
-class MovieCreate(MovieBase):
-    pass
-
-
-class Movie(MovieBase):
-    id: int
-
-    class ConfigDict:
-        from_attributes = True
+from app.schemas.episode import AnimeEpisodeBase
 
 class AnimeBase(BaseModel):
     id: int
-    kodik_id: str | None
     shikimori_id: str | None
     title: str
     title_en: str | None
@@ -40,6 +19,10 @@ class AnimeBase(BaseModel):
     released_episodes: int | None
     total_episodes: int | None
     other_titles: list[str] | None
+    
+
+class AnimeWithEpisodes(AnimeBase):
+    episodes: list[AnimeEpisodeBase] | None
 
     class ConfigDict:
         from_attributes = True
