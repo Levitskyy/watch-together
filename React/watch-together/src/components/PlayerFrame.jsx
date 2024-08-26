@@ -4,7 +4,6 @@ const serverURL = 'http://localhost:8000/';
 
 const PlayerFrame = ({ animeId, animeKind }) => {
     const [episodes, setEpisodes] = useState(null);
-    const [uniqueTranslations, setUniqueTranslations] = useState([]);
     const [uniqueVoices, setUniqueVoices] = useState([]);
     const [uniqueSubs, setUniqueSubs] = useState([]);
     const [streamLink, setStreamLink] = useState('');
@@ -26,7 +25,14 @@ const PlayerFrame = ({ animeId, animeKind }) => {
         fetch(serverURL + `api/episodes/title/${animeId}`)
             .then((response) => response.json())
             .then((data) => {
-                setEpisodes(data);
+                let filteredEpisodes = null;
+                if (animeKind === "tv") {
+                    filteredEpisodes = data.filter(episode => episode.season !== 0);
+                }
+                else {
+                    filteredEpisodes = data;
+                }
+                setEpisodes(filteredEpisodes);
 
                 const translationsSet = new Set();
                 const voiceSet = new Set();
@@ -43,11 +49,6 @@ const PlayerFrame = ({ animeId, animeKind }) => {
                     }
                 });
 
-                const uniqueTranslationsArray = Array.from(translationsSet).map(item => {
-                    const [title, type] = item.split(':::');
-                    return { title, type };
-                });
-
                 const uniqueVoicesArray = Array.from(voiceSet).map(item => {
                     const [title, type] = item.split(':::');
                     return { title, type };
@@ -58,23 +59,14 @@ const PlayerFrame = ({ animeId, animeKind }) => {
                     return { title, type };
                 });
 
-                setUniqueTranslations(uniqueTranslationsArray);
                 setUniqueVoices(uniqueVoicesArray);
                 setUniqueSubs(uniqueSubsArray);
                 setVoiceCount(voiceSet.size);
                 setSubCount(subSet.size);
             })
             .catch((error) => console.error('Error fetching episodes:', error));
-    }, [animeId]);
+    }, [animeId, animeKind]);
 
-    useEffect(() => {
-        if (episodes) {
-            if (animeKind === 'tv') {
-                const filteredEpisodes = episodes.filter(episode => episode.season !== 0);
-                setEpisodes(filteredEpisodes)
-            }
-        }
-    }, [episodes]);
 
     useEffect(() => {
         if (uniqueVoices.length > 0) {
@@ -103,7 +95,7 @@ const PlayerFrame = ({ animeId, animeKind }) => {
                 setStreamLink(filteredEpisodes[0].url);
             }
         }
-    }, [selectedTranslation]);
+    }, [selectedTranslation, episodes]);
 
     const handlePrevEpisode = () => {
         if (episodesContainerRef.current) {
@@ -130,6 +122,7 @@ const PlayerFrame = ({ animeId, animeKind }) => {
             <div className="flex justify-left w-full">
                 <div className="w-3/4 relative" ref={playerRef} style={{ paddingBottom: '42.2%' }}>
                     <iframe
+                        title="kodik-player"
                         className="rounded w-full h-full absolute top-0 left-0"
                         id="kodik-player"
                         src={streamLink + '?translations=false'}
