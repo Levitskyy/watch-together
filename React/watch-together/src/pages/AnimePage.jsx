@@ -112,7 +112,7 @@ const AnimePage = () => {
         </div>
       </div>
       <div className="container mx-auto flex justify-center w-3/4 bg-neutral-800 rounded mt-8">
-        <PlayerFrame animeId={id}/>
+        <PlayerFrame animeId={id} animeKind={anime.anime_kind}/>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 
 const serverURL = 'http://localhost:8000/';
 
-const PlayerFrame = ({ animeId }) => {
+const PlayerFrame = ({ animeId, animeKind }) => {
     const [episodes, setEpisodes] = useState(null);
     const [uniqueTranslations, setUniqueTranslations] = useState([]);
     const [uniqueVoices, setUniqueVoices] = useState([]);
@@ -69,7 +69,10 @@ const PlayerFrame = ({ animeId }) => {
 
     useEffect(() => {
         if (episodes) {
-            setStreamLink(episodes[0].url);
+            if (animeKind === 'tv') {
+                const filteredEpisodes = episodes.filter(episode => episode.season !== 0);
+                setEpisodes(filteredEpisodes)
+            }
         }
     }, [episodes]);
 
