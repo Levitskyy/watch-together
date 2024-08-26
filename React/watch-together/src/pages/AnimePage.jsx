@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { replaceAnimeType } from '../components/AnimeCard';
 import friends from '../svg/friends.svg'
+import PlayerFrame from '../components/PlayerFrame';
 
 const serverURL = 'http://localhost:8000/';
 
@@ -40,7 +41,7 @@ const AnimePage = () => {
   const [anime, setAnime] = useState(null);
 
   useEffect(() => {
-    fetch(serverURL + `api/animes/${id}`)
+    fetch(serverURL + `api/animes/title/${id}`)
       .then((response) => response.json())
       .then((data) => setAnime(data))
       .catch((error) => console.error('Error fetching anime:', error));
@@ -51,7 +52,7 @@ const AnimePage = () => {
   }
 
   return (
-    <div className="w-full bg-neutral-900 text-white min-h-screen">
+    <div className="w-full bg-neutral-900 text-white min-h-screen pb-16">
       <div className="container mx-auto flex flex-col md:flex-row justify-center w-11/12 gap-12 pt-12">
         <div className="flex flex-col max-w-64">
           <img src={anime.poster_url} alt={anime.title} className="w-full h-auto rounded-lg" />
@@ -109,6 +110,9 @@ const AnimePage = () => {
             <p className="text-slate-500">{replaceAnimeType(anime.anime_kind)}</p>
           </div>
         </div>
+      </div>
+      <div className="container mx-auto flex justify-center w-3/4 bg-neutral-800 rounded mt-8">
+        <PlayerFrame animeId={id}/>
       </div>
     </div>
   );

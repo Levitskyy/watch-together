@@ -293,7 +293,7 @@ async def get_all_kinds(db: Annotated[AsyncSession, Depends(get_db)]) -> list[st
 
 
 
-@router.get('/{id}')
+@router.get('/title/{id}')
 async def get_anime(id: int, db: Annotated[AsyncSession, Depends(get_db)]) -> AnimeBase:
     query = select(Anime)
     query = query.where(Anime.id == id)

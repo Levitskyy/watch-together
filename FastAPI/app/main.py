@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from contextlib import asynccontextmanager
 
 from app import database
-from app.routers import movies, users, animes
+from app.routers import movies, users, animes, episodes
 from app.models.base import Base
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.inmemory import InMemoryBackend
@@ -41,3 +41,4 @@ app.mount("/static", StaticFiles(directory='static'), name='static')
 app.include_router(movies.router, prefix='/movies', tags=['movies'])
 app.include_router(users.router, prefix='/users', tags=['users'])
 app.include_router(animes.router, prefix='/animes', tags=['animes'])
+app.include_router(episodes.router, prefix='/episodes', tags=['episodes'])
