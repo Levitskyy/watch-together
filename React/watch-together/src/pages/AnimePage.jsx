@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { replaceAnimeType } from '../components/AnimeCard';
 import friends from '../svg/friends.svg'
 import PlayerFrame from '../components/PlayerFrame';
+import { nanoid } from 'nanoid'
 
 const serverURL = 'http://localhost:8000/';
 
@@ -48,7 +49,7 @@ const AnimePage = () => {
               <svg className="svg-inline--fa fa-play fa-fw w-3" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="play" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"></path></svg>
               <span>Начать смотреть</span>
             </a>
-            <a href="#videoplayer" className="flex gap-2 justify-left w-full bg-purple-700 py-1 px-3 rounded mb-2 hover:bg-purple-500 transition duration-300">
+            <a href={"/room/" + nanoid() + "?animeId=" + id + "&animeKind=" + anime.anime_kind} className="flex gap-2 justify-left w-full bg-purple-700 py-1 px-3 rounded mb-2 hover:bg-purple-500 transition duration-300">
               <img src={friends} alt="friends" className="w-3 filter invert" />
               <span>Смотреть с друзьями</span>
             </a>

@@ -10,6 +10,8 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import AnimeList from './pages/AnimeList';
 import AnimePage from './pages/AnimePage';
+import WatchRoom from './pages/WatchRoom';
+import TestPage from './pages/TestPage';
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/anime/:id" Component={AnimePage} />
+        <Route path="/room/:roomId" Component={WatchRoom} />
+        <Route path="/test" Component={TestPage} />
       </Routes>
     </Router>
   );
