@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
 
 const serverURL = 'http://localhost:8000/';
 
-const PlayerFrame = ({ animeId, animeKind, translation, link, onEpisodeUpdate, onToggle, onSeek }) => {
+const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpisodeUpdate, onToggle, onSeek }, ref) => {
     const [episodes, setEpisodes] = useState(null);
     const [uniqueVoices, setUniqueVoices] = useState([]);
     const [uniqueSubs, setUniqueSubs] = useState([]);
@@ -19,6 +19,7 @@ const PlayerFrame = ({ animeId, animeKind, translation, link, onEpisodeUpdate, o
     const translationsRef = useRef(null);
     const buttonContainerRef = useRef(null);
     const episodesContainerRef = useRef(null); // Реф для контейнера с эпизодами
+    const currentSeconds = useRef(0);
     const [initialPlayerHeight, setInitialPlayerHeight] = useState(0);
 
     useEffect(() => {
@@ -68,7 +69,6 @@ const PlayerFrame = ({ animeId, animeKind, translation, link, onEpisodeUpdate, o
             .catch((error) => console.error('Error fetching episodes:', error));
     }, [animeId, animeKind]);
 
-
     useEffect(() => {
         if (translation) {
             return;
@@ -91,6 +91,8 @@ const PlayerFrame = ({ animeId, animeKind, translation, link, onEpisodeUpdate, o
     useEffect(() => {
         if (streamLink) {
             const data = {
+                animeId: animeId,
+                animeKind: animeKind,
                 translation: selectedTranslation,
                 link: streamLink
             }
@@ -114,9 +116,6 @@ const PlayerFrame = ({ animeId, animeKind, translation, link, onEpisodeUpdate, o
     }, [episodes, initialPlayerHeight]);
 
     useEffect(() => {
-        // if (link) {
-        //     return;
-        // }
         if (episodes) {
             const filteredEpisodes = episodes.filter(episode => episode.translation_title === selectedTranslation);
             setTranslationEps(filteredEpisodes);
@@ -130,6 +129,32 @@ const PlayerFrame = ({ animeId, animeKind, translation, link, onEpisodeUpdate, o
             }
         }
     }, [selectedTranslation, episodes]);
+
+    useEffect(() => {
+        const handleMessage = (event) => {
+            if (event.data.key === 'kodik_player_play') {
+                const data = {event: 'toggle', value: 'play'};
+                onToggle(data);
+            }
+            else if (event.data.key === 'kodik_player_pause') {
+                const data = {event: 'toggle', value: 'pause'};
+                onToggle(data);
+            }
+            else if (event.data.key === 'kodik_player_seek') {
+                const data = {event: 'seek', value: Math.round(event.data.value.time)};
+                onSeek(data);
+            }
+            else if (event.data.key === 'kodik_player_time_update') {
+                currentSeconds.current = event.data.value;
+            }
+        };
+
+        window.addEventListener('message', handleMessage);
+
+        return () => {
+            window.removeEventListener('message', handleMessage);
+        };
+    }, []);
 
     const handlePrevEpisode = () => {
         if (episodesContainerRef.current) {
@@ -153,8 +178,14 @@ const PlayerFrame = ({ animeId, animeKind, translation, link, onEpisodeUpdate, o
         const iframe = iframeRef.current;
         if (iframe) {
             iframe.contentWindow.postMessage(message, '*');
+            console.log('Posted message to IFRAME:', message);
         }
     };
+
+    useImperativeHandle(ref, () => ({
+        sendMessageToIframe,
+        currentSeconds,
+    }));
 
     return (
         <div className="w-full">
@@ -241,7 +272,6 @@ const PlayerFrame = ({ animeId, animeKind, translation, link, onEpisodeUpdate, o
                 <button
                     className="text-white bg-neutral-800 hover:bg-neutral-700 transition duration-300 px-3 py-1 rounded"
                     onClick={handlePrevEpisode}
-                    // disabled={currentEpisodeIndex === 0}
                 >
                     ◀
                 </button>
@@ -269,13 +299,12 @@ const PlayerFrame = ({ animeId, animeKind, translation, link, onEpisodeUpdate, o
                 <button
                     className="text-white bg-neutral-800 hover:bg-neutral-700 transition duration-300 px-3 py-1 rounded"
                     onClick={handleNextEpisode}
-                    // disabled={currentEpisodeIndex + 1 >= (translationEps ? translationEps.length : 0)}
                 >
                     ▶
                 </button>
             </div>
         </div>
     );
-};
+});
 
 export default PlayerFrame;
