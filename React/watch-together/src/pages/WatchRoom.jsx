@@ -23,6 +23,7 @@ const WatchRoom = () => {
   const playerRef = useRef(null);
   const socketClientRef = useRef(null);
   const lastCallTimeRef = useRef(0);
+  const lastToggleTimeRef = useRef(0);
 
   const sendMessageToServer = (message) => {
     if (socketClientRef.current) {
@@ -64,20 +65,30 @@ const WatchRoom = () => {
 
       }
       if (data) {
+        const currentTime = Date.now();
         if (data.value === 'play') {
           const playerMessage = {key: 'kodik_player_api', value: {method: 'play'}};
-          sendMessageToPlayer(playerMessage);
+          const timeSinceLastCall = currentTime - lastCallTimeRef.current;
+
+          if (timeSinceLastCall >= 300) {
+            sendMessageToPlayer(playerMessage);
+            lastToggleTimeRef.current = currentTime;
+          }
         }
         else if (data.value === 'pause') {
           const playerMessage = {key: 'kodik_player_api', value: {method: 'pause'}};
-          sendMessageToPlayer(playerMessage);
+          const timeSinceLastCall = currentTime - lastCallTimeRef.current;
+          
+          if (timeSinceLastCall >= 300) {
+            sendMessageToPlayer(playerMessage);
+            lastToggleTimeRef.current = currentTime;
+          }
         }
         else if (data.event === 'seek') {
           const playerMessage = {key: 'kodik_player_api', value: {method: 'seek', seconds: data.value}};
           const diff = Math.abs(playerRef.current.currentSeconds.current - data.value);
           console.log('diff ' + diff);
 
-          const currentTime = Date.now();
           const timeSinceLastCall = currentTime - lastCallTimeRef.current;
 
           if (diff > 3 && timeSinceLastCall >= 300) {
