@@ -4,8 +4,7 @@ import { replaceAnimeType } from '../components/AnimeCard';
 import friends from '../svg/friends.svg'
 import PlayerFrame from '../components/PlayerFrame';
 import { nanoid } from 'nanoid'
-
-const serverURL = 'http://localhost:8000/';
+import { serverURL } from '../App';
 
 const mapStatusToRussian = (status) => {
   const statusMap = {
@@ -29,7 +28,7 @@ const AnimePage = () => {
   const [anime, setAnime] = useState(null);
 
   useEffect(() => {
-    fetch(serverURL + `api/animes/title/${id}`)
+    fetch(`http://${serverURL}/api/animes/title/${id}`)
       .then((response) => response.json())
       .then((data) => setAnime(data))
       .catch((error) => console.error('Error fetching anime:', error));

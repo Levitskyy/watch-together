@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
-
-const serverURL = 'http://localhost:8000/';
+import { serverURL } from '../App';
 
 const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpisodeUpdate, onToggle, onSeek }, ref) => {
     const [episodes, setEpisodes] = useState(null);
@@ -23,7 +22,7 @@ const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpiso
     const [initialPlayerHeight, setInitialPlayerHeight] = useState(0);
 
     useEffect(() => {
-        fetch(serverURL + `api/episodes/title/${animeId}`)
+        fetch(`http://${serverURL}/api/episodes/title/${animeId}`)
             .then((response) => response.json())
             .then((data) => {
                 let filteredEpisodes = null;
@@ -134,15 +133,21 @@ const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpiso
         const handleMessage = (event) => {
             if (event.data.key === 'kodik_player_play') {
                 const data = {event: 'toggle', value: 'play'};
-                onToggle(data);
+                if (onToggle) {
+                    onToggle(data);
+                }
             }
             else if (event.data.key === 'kodik_player_pause') {
                 const data = {event: 'toggle', value: 'pause'};
-                onToggle(data);
+                if (onToggle) {
+                    onToggle(data);
+                }
             }
             else if (event.data.key === 'kodik_player_seek') {
                 const data = {event: 'seek', value: Math.round(event.data.value.time)};
-                onSeek(data);
+                if (onSeek) {
+                    onSeek(data);
+                }
             }
             else if (event.data.key === 'kodik_player_time_update') {
                 currentSeconds.current = event.data.value;

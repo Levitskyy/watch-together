@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import 'rc-slider/assets/index.css';
 import Filter from '../components/Filter';
 import AnimeCard from '../components/AnimeCard';
-
-const serverURL = "http://localhost:8000/";
+import { serverURL } from '../App';
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen">
@@ -36,7 +35,7 @@ const AnimeList = () => {
     };
     setIsFetching(true);
     try {
-      const url = new URL(serverURL + 'api/animes/filter');
+      const url = new URL(`http://${serverURL}/api/animes/filter`);
       Object.keys(params).forEach(key => {
         if (params[key] !== undefined && params[key] !== null && params[key] !== '') {
           if (Array.isArray(params[key])) {

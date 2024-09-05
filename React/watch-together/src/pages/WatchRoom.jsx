@@ -2,12 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { useParams, useLocation } from 'react-router-dom';
 import PlayerFrame from "../components/PlayerFrame";
 import WebSocketClient from "../components/WebSocketClient";
-
+import { serverURL } from "../App";
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-const serverURL = 'ws://localhost:8000';
 
 const WatchRoom = () => {
   const { roomId } = useParams();
@@ -54,7 +53,7 @@ const WatchRoom = () => {
   };
 
   useEffect(() => {
-    socketClientRef.current = new WebSocketClient(`${serverURL}/api/room/${roomId}`);
+    socketClientRef.current = new WebSocketClient(`ws://${serverURL}/api/room/${roomId}`);
 
     socketClientRef.current.setOnMessageCallback((message) => {
       setMessages((prevMessages) => [...prevMessages, message]);

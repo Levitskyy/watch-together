@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import 'rc-slider/assets/index.css';
 import { replaceAnimeType } from './AnimeCard';
-
-const serverURL = 'http://localhost:8000/';
+import { serverURL } from '../App';
 
 const GenresList = ({ genres, selectedGenres, onGenreChange, onBackClick }) => {
   return (
@@ -58,12 +57,12 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onKindChange, onM
       // 'Access-Control-Allow-Headers': 'Content-Type'
     });
 
-    fetch(serverURL + 'api/animes/genres', { headers })
+    fetch(`http://${serverURL}/api/animes/genres`, { headers })
       .then((response) => response.json())
       .then((data) => setGenres(data))
       .catch((error) => console.error('Error fetching genres:', error));
 
-    fetch(serverURL + 'api/animes/kinds', { headers })
+    fetch(`http://${serverURL}/api/animes/kinds`, { headers })
       .then((response) => response.json())
       .then((data) => setKinds(data))
       .catch((error) => console.error('Error fetching kinds:', error));
