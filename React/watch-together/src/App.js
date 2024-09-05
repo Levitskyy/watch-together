@@ -13,7 +13,7 @@ import AnimePage from './pages/AnimePage';
 import WatchRoom from './pages/WatchRoom';
 import TestPage from './pages/TestPage';
 
-export const serverURL = "localhost:8000";
+export const serverURL = "localhost:80";
 
 function App() {
   return (
