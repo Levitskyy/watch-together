@@ -61,3 +61,21 @@ async def login_for_tokens(form_data: Annotated[OAuth2PasswordRequestForm, Depen
     )
     
     return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
+
+@router.post("/refresh")
+async def refresh_access_token(refresh_token: str) -> dict:
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    token_data = verify_token(refresh_token, credentials_exception)
+    access_token_expires = timedelta(minutes=get_settings().ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": token_data.username}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@router.get("/me")
+async def read_users_me(current_user: Annotated[User, Depends(get_current_active_user)]) -> dict:
+    return {"username": current_user.username, "role" : current_user.role}
