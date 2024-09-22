@@ -7,6 +7,7 @@ import time
 
 from app import database
 from app.routers import movies, users, animes, episodes, rooms
+from app.auth.routes import router as auth_router
 from app.models.base import Base
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.inmemory import InMemoryBackend
@@ -14,6 +15,7 @@ from fastapi_cache.backends.inmemory import InMemoryBackend
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     FastAPICache.init(InMemoryBackend())
+    # await database.init_db()
     yield
 
 
@@ -47,6 +49,7 @@ app.include_router(users.router, prefix='/users', tags=['users'])
 app.include_router(animes.router, prefix='/animes', tags=['animes'])
 app.include_router(episodes.router, prefix='/episodes', tags=['episodes'])
 app.include_router(rooms.router, prefix='/room', tags=['rooms'])
+app.include_router(auth_router, prefix='/auth', tags=['auth'])
 
 
 @app.middleware("http")
