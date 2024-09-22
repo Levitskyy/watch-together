@@ -5,6 +5,7 @@ import friends from '../svg/friends.svg'
 import PlayerFrame from '../components/PlayerFrame';
 import { nanoid } from 'nanoid'
 import { serverURL } from '../App';
+import axios from 'axios';
 
 const mapStatusToRussian = (status) => {
   const statusMap = {
@@ -28,10 +29,16 @@ const AnimePage = () => {
   const [anime, setAnime] = useState(null);
 
   useEffect(() => {
-    fetch(`http://${serverURL}/api/animes/title/${id}`)
-      .then((response) => response.json())
-      .then((data) => setAnime(data))
-      .catch((error) => console.error('Error fetching anime:', error));
+    const fetchAnime = async () => {
+      try {
+        const response = await axios.get(`http://${serverURL}/api/animes/title/${id}`);
+        setAnime(response.data);
+      } catch (error) {
+        console.error('Error fetching anime:', error);
+      }
+    };
+  
+    fetchAnime();
   }, [id]);
 
   if (!anime) {

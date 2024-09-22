@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import { serverURL } from '../App';
+import axios from 'axios';
 
 const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpisodeUpdate, onToggle, onSeek }, ref) => {
     const [episodes, setEpisodes] = useState(null);
@@ -22,44 +23,43 @@ const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpiso
     const [initialPlayerHeight, setInitialPlayerHeight] = useState(0);
 
     useEffect(() => {
-        fetch(`http://${serverURL}/api/episodes/title/${animeId}`)
-            .then((response) => response.json())
-            .then((data) => {
+        axios.get(`http://${serverURL}/api/episodes/title/${animeId}`)
+            .then((response) => {
+                const data = response.data;
                 let filteredEpisodes = null;
-                console.log(animeKind)
+                console.log(animeKind);
                 if (animeKind === "tv") {
                     filteredEpisodes = data.filter(episode => episode.season !== 0);
-                }
-                else {
+                } else {
                     filteredEpisodes = data;
                 }
                 setEpisodes(filteredEpisodes);
-
+    
                 const translationsSet = new Set();
                 const voiceSet = new Set();
                 const subSet = new Set();
-
+    
                 data.forEach(episode => {
                     const translationKey = `${episode.translation_title}:::${episode.translation_type}`;
                     translationsSet.add(translationKey);
-
+    
                     if (episode.translation_type === 'voice') {
                         voiceSet.add(translationKey);
                     } else if (episode.translation_type === 'subtitles') {
                         subSet.add(translationKey);
                     }
                 });
-
+    
                 const uniqueVoicesArray = Array.from(voiceSet).map(item => {
                     const [title, type] = item.split(':::');
                     return { title, type };
                 });
-
+    
                 const uniqueSubsArray = Array.from(subSet).map(item => {
                     const [title, type] = item.split(':::');
                     return { title, type };
                 });
-
+    
                 setUniqueVoices(uniqueVoicesArray);
                 setUniqueSubs(uniqueSubsArray);
                 setVoiceCount(voiceSet.size);

@@ -3,6 +3,7 @@ import 'rc-slider/assets/index.css';
 import Filter from '../components/Filter';
 import AnimeCard from '../components/AnimeCard';
 import { serverURL } from '../App';
+import axios from 'axios';
 
 const LoadingSpinner = () => (
   <div className="flex justify-center items-center h-screen">
@@ -63,8 +64,8 @@ const AnimeList = () => {
           url.searchParams.append('asc', asc);
         }       
       }
-      const response = await fetch(url.toString());
-      const data = await response.json();
+      const response = await axios.get(url.toString());
+      const data = response.data;
 
       if (data.length < limit) {
         setHasDataLeft({value: false});

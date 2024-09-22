@@ -1,8 +1,15 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { useAuth } from '../components/AuthProvider';
+import axios from 'axios';
+import { serverURL } from '../App';
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const { setToken } = useAuth();
+  const navigate = useNavigate();
+
   const initialValues = {
     name: '',
     password: '',
@@ -13,9 +20,28 @@ const Login = () => {
     password: Yup.string().required('Обязательное поле'),
   });
 
-  const handleSubmit = (values, { setSubmitting }) => {
-    console.log(values);
-    setSubmitting(false);
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const params = new URLSearchParams();
+      params.append('username', values.name);
+      params.append('password', values.password);
+
+      const response = await axios.post(`http://${serverURL}/api/auth/token`, params, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+  
+      const { data } = response;
+      
+      console.log(data.access_token);
+      setToken(data.access_token);
+      setSubmitting(false);
+      navigate("/", { replace: true });
+    } catch (error) {
+      console.error('Error during authentication:', error);
+      setSubmitting(false);
+    }
   };
 
   const handleForgotPassword = () => {
