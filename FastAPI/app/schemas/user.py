@@ -11,8 +11,11 @@ class UserCreate(UserBase):
     password: str
 
 
-class User(UserBase):
+class User(UserCreate):
     id: int
+    disabled: bool
+    verified: bool
+    role: str
     created_at: datetime
     updated_at: datetime
 

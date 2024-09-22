@@ -12,3 +12,6 @@ asyncpg==0.29.0
 requests==2.32.3
 fastapi-cache2==0.2.2
 websockets==12.0
+python-multipart==0.0.9
+bcrypt==4.2.0
+passlib==1.7.4
