@@ -15,7 +15,7 @@ from fastapi_cache.backends.inmemory import InMemoryBackend
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     FastAPICache.init(InMemoryBackend())
-    # await database.init_db()
+    await database.init_db()
     yield
 
 

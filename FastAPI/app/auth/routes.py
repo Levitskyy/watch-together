@@ -2,6 +2,7 @@ from datetime import timedelta
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from app.auth.models import RefreshToken
 from app.config import get_settings
 from app.models.user import User
 from app.schemas.user import UserCreate
@@ -10,6 +11,10 @@ from app.auth.utils import get_user, verify_password, get_password_hash
 from app.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -46,7 +51,8 @@ async def get_current_active_user(
     return current_user
 
 @router.post("/token")
-async def login_for_tokens(response: Response, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> dict:
+async def login_for_tokens(response: Response, 
+                           form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> dict:
     user = await authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -59,7 +65,7 @@ async def login_for_tokens(response: Response, form_data: Annotated[OAuth2Passwo
         data={"sub": user.username, "role": user.role}, expires_delta=access_token_expires
     )
     refresh_token_expires = timedelta(days=get_settings().REFRESH_TOKEN_EXPIRE_DAYS)
-    refresh_token = create_refresh_token(
+    refresh_token = await create_refresh_token(
         data={"sub": user.username, "role": user.role}, expires_delta=refresh_token_expires
     )
 
