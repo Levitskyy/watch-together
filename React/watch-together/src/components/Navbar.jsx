@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
 import logo from '../svg/logo.svg';
+import { useAuth } from './AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const navLogout = async () => {
+    const res = await logout();
+    navigate('/login');
+  };
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -24,8 +33,17 @@ const Navbar = () => {
             placeholder="Поиск..."
             className="px-3 py-1 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <a href="/register" className="bg-neutral-800 text-white px-4 py-1 rounded-md border-2 hover:bg-neutral-600 transition duration-300">Зарегистрироваться</a>
-          <a href="/login" className="bg-neutral-100 text-black px-4 py-1 rounded-md border-2 border-gray-800 hover:bg-neutral-300 transition duration-300">Войти</a>
+          {isAuthenticated ? (
+            <>
+              <a href="/profile" className="bg-neutral-800 text-white px-4 py-1 rounded-md border-2 hover:bg-neutral-600 transition duration-300">Профиль</a>
+              <button onClick={logout} className="bg-neutral-100 text-black px-4 py-1 rounded-md border-2 border-gray-800 hover:bg-neutral-300 transition duration-300">Выйти</button>
+            </>
+          ) : (
+            <>
+              <a href="/register" className="bg-neutral-800 text-white px-4 py-1 rounded-md border-2 hover:bg-neutral-600 transition duration-300">Зарегистрироваться</a>
+              <a href="/login" className="bg-neutral-100 text-black px-4 py-1 rounded-md border-2 border-gray-800 hover:bg-neutral-300 transition duration-300">Войти</a>
+            </>
+          )}
         </div>
         <div className="xl:hidden">
           <button className="text-white hover:text-gray-300 focus:outline-none" onClick={toggleMenu}>
@@ -45,8 +63,17 @@ const Navbar = () => {
             placeholder="Поиск..."
             className="px-3 py-1 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <a href="/register" className="bg-neutral-800 text-white px-4 py-1 rounded-md border-2 hover:bg-neutral-600 transition duration-300">Зарегистрироваться</a>
-          <a href="/login" className="bg-neutral-100 text-black px-4 py-1 rounded-md border-2 border-gray-800 hover:bg-neutral-300 transition duration-300">Войти</a>
+          {isAuthenticated ? (
+            <>
+              <a href="/profile" className="bg-neutral-800 text-white px-4 py-1 rounded-md border-2 hover:bg-neutral-600 transition duration-300">Профиль</a>
+              <button onClick={navLogout} className="bg-neutral-100 text-black px-4 py-1 rounded-md border-2 border-gray-800 hover:bg-neutral-300 transition duration-300">Выйти</button>
+            </>
+          ) : (
+            <>
+              <a href="/register" className="bg-neutral-800 text-white px-4 py-1 rounded-md border-2 hover:bg-neutral-600 transition duration-300">Зарегистрироваться</a>
+              <a href="/login" className="bg-neutral-100 text-black px-4 py-1 rounded-md border-2 border-gray-800 hover:bg-neutral-300 transition duration-300">Войти</a>
+            </>
+          )}
         </div>
       )}
     </nav>

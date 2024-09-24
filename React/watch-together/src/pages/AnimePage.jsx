@@ -29,16 +29,18 @@ const AnimePage = () => {
   const [anime, setAnime] = useState(null);
 
   useEffect(() => {
-    const fetchAnime = async () => {
-      try {
-        const response = await axiosInstance.get(`http://${serverURL}/api/animes/title/${id}`);
-        setAnime(response.data);
-      } catch (error) {
-        console.error('Error fetching anime:', error);
-      }
-    };
-  
-    fetchAnime();
+    if (id) {
+      const fetchAnime = async () => {
+        try {
+          const response = await axiosInstance.get(`http://${serverURL}/api/animes/title/${id}`);
+          setAnime(response.data);
+        } catch (error) {
+          console.error('Error fetching anime:', error);
+        }
+      };
+    
+      fetchAnime();
+    }
   }, [id]);
 
   if (!anime) {

@@ -10,6 +10,7 @@ import WatchRoom from "../pages/WatchRoom";
 import TestPage from "../pages/TestPage";
 import Logout from "../pages/Logout";
 import Profile from "../pages/Profile";
+import Layout from "./Layout";
 
 const Routes = () => {
   const { token } = useAuth();
@@ -18,27 +19,33 @@ const Routes = () => {
   const routesForPublic = [
     {
         path: "/",
-        element: <Home />,
-    },
-    {
-        path: "/series-list",
-        element: <AnimeList />,
-    },
-    {
-        path: "/anime/:id",
-        element: <AnimePage />,
-    },
-    {
-        path: "/room/:roomId",
-        element: <WatchRoom />,
-    },
-    {
-        path: "/test",
-        element: <TestPage />,
-    },
-    {
-      path: "/profile",
-      element: <Profile />,
+        element: <Layout />,
+        children: [
+          {
+            path: "/",
+            element: <Home />,
+          },
+          {
+            path: "/series-list",
+            element: <AnimeList />,
+          },
+          {
+            path: "/anime/:id",
+            element: <AnimePage />,
+          },
+          {
+            path: "/room/:roomId",
+            element: <WatchRoom />,
+          },
+          {
+            path: "/test",
+            element: <TestPage />,
+          },
+          {
+            path: "/profile",
+            element: <Profile />,
+          },
+        ],
     },
   ];
 
@@ -59,12 +66,18 @@ const Routes = () => {
   // Define routes accessible only to non-authenticated users
   const routesForNotAuthenticatedOnly = [
     {
-        path: "/login",
-        element: <Login />,
-    },
-    {
-        path: "/register",
-        element: <Register />,
+      path: "/",
+      element: <Layout />,
+      children: [
+        {
+          path: "/login",
+          element: <Login />,
+        },
+        {
+          path: "/register",
+          element: <Register />,
+        },
+      ],
     },
   ];
 
