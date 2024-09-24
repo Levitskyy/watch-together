@@ -2,12 +2,13 @@ from datetime import timedelta
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from sqlalchemy import delete, select
 from app.auth.models import RefreshToken
 from app.config import get_settings
 from app.models.user import User
 from app.schemas.user import UserCreate
-from app.auth.jwt import create_access_token, create_refresh_token, verify_token
-from app.auth.utils import get_user, verify_password, get_password_hash
+from app.auth.jwt import create_access_token, create_refresh_token, verify_refresh_token, verify_token
+from app.auth.utils import authenticate_user, get_user, verify_password, get_password_hash, get_current_user, get_current_active_user
 from app.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
@@ -20,35 +21,6 @@ router = APIRouter()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/token')
 
-async def authenticate_user(username: str, password: str) -> User | None:
-    async for db in get_db():
-        user = await get_user(db, username=username)
-    if not user:
-        return None
-    if not verify_password(password, user.password_hash):
-        return None
-    return user
-
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> User:
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    token_data = verify_token(token)
-    
-    async for db in get_db():
-        user = await get_user(db, username=token_data.username)
-    if user is None:
-        raise credentials_exception
-    return user
-
-async def get_current_active_user(
-    current_user: Annotated[User, Depends(get_current_user)],
-) -> User:
-    if current_user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
-    return current_user
 
 @router.post("/token")
 async def login_for_tokens(response: Response, 
@@ -68,19 +40,26 @@ async def login_for_tokens(response: Response,
     refresh_token = await create_refresh_token(
         data={"sub": user.username, "role": user.role}, expires_delta=refresh_token_expires
     )
+    # response.set_cookie(key='refresh_token',
+    #                     value='',
+    #                     httponly=True,
+    #                     secure=True,
+    #                     samesite='strict',
+    #                     max_age= 0,
+    #                     )
 
     response.set_cookie(key='refresh_token',
                         value=refresh_token,
                         httponly=True,
                         secure=True,
-                        samesite='strict',
+                        samesite='none',
                         max_age=get_settings().REFRESH_TOKEN_EXPIRE_DAYS * 24 * 60 * 60, # in seconds
                         )
     
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.post("/refresh")
-async def refresh_access_token(request: Request) -> dict:
+async def refresh_access_token(request: Request, db: Annotated[AsyncSession, Depends(get_db)]) -> dict:
     refresh_token = request.cookies.get("refresh_token")
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -88,12 +67,22 @@ async def refresh_access_token(request: Request) -> dict:
         headers={"WWW-Authenticate": "Bearer"},
     )
     if not refresh_token:
+        logger.info('no refresh token in cookies')
         raise credentials_exception
-    token_data = verify_token(refresh_token)
+    
+    token_data = verify_refresh_token(refresh_token)
+    query = select(RefreshToken).where(RefreshToken.jti == token_data.jti)
+    db_token = await db.execute(query)
+    db_token = db_token.scalars().one_or_none()
+    if not db_token or db_token.disabled:
+        logger.info('no refresh token in db or disabled')
+        raise credentials_exception
+
     access_token_expires = timedelta(minutes=get_settings().ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": token_data.username, "role": token_data.role}, expires_delta=access_token_expires
     )
+    logger.info(f"refreshing token:: {access_token}")
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.get("/me")
@@ -114,4 +103,20 @@ async def register_user(user: UserCreate, db: Annotated[AsyncSession, Depends(ge
         await db.rollback()
         raise HTTPException(status_code=400, detail="Email or username already registered")
     return {"message": "User registered successfully"}
+
+@router.post("/logout")
+async def logout_user(user: Annotated[User, Depends(get_current_active_user)],
+                      db: Annotated[AsyncSession, Depends(get_db)]) -> bool:
+    query = select(RefreshToken).where(RefreshToken.username == user.username)
+    tokens = await db.execute(query)
+    tokens = tokens.scalars().all()
+    for token in tokens:
+        token.disabled = True
+    try:
+        await db.commit()
+    except Exception as e:
+        await db.rollback()
+        return False
+    else:
+        return True
 

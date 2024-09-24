@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useAuth } from '../components/AuthProvider';
-import axios from 'axios';
+import axiosInstance from '../components/axiosInstance';
 import { serverURL } from '../App';
 import { useNavigate } from "react-router-dom";
 
@@ -26,10 +26,11 @@ const Login = () => {
       params.append('username', values.name);
       params.append('password', values.password);
 
-      const response = await axios.post(`http://${serverURL}/api/auth/token`, params, {
+      const response = await axiosInstance.post(`http://${serverURL}/api/auth/token`, params, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
+        withCredentials: true
       });
   
       const { data } = response;

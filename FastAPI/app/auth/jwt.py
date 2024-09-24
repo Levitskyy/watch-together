@@ -3,7 +3,7 @@ from app.database import get_db
 from app.auth.models import RefreshToken
 from app.config import get_settings
 from datetime import datetime, timedelta, timezone
-from app.auth.schemas import TokenData
+from app.auth.schemas import RefreshTokenBase, RefreshTokenWeb, TokenData
 from jwt.exceptions import InvalidTokenError
 import jwt
 import uuid
@@ -62,4 +62,24 @@ def verify_token(token: str) -> TokenData:
         token_data = TokenData(username=username, role=role)
         return token_data
     except InvalidTokenError:
+        raise credentials_exception
+    
+def verify_refresh_token(token: str) -> RefreshTokenWeb:
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, get_settings().JWT_SECRET_KEY, algorithms=[get_settings().JWT_ALGORITHM])
+        username: str = payload.get("sub")
+        role: str = payload.get("role")
+        jti: str = payload.get("jti")
+        if username is None or jti is None:
+            logger.info('no username or jti in refresh token')
+            raise credentials_exception
+        token_data = RefreshTokenWeb(username=username, jti=jti, role=role, expiration_date=None)
+        return token_data
+    except InvalidTokenError:
+        logger.info('invalid token error in verify refresh token')
         raise credentials_exception

@@ -9,6 +9,7 @@ import AnimePage from "../pages/AnimePage";
 import WatchRoom from "../pages/WatchRoom";
 import TestPage from "../pages/TestPage";
 import Logout from "../pages/Logout";
+import Profile from "../pages/Profile";
 
 const Routes = () => {
   const { token } = useAuth();
@@ -35,6 +36,10 @@ const Routes = () => {
         path: "/test",
         element: <TestPage />,
     },
+    {
+      path: "/profile",
+      element: <Profile />,
+    },
   ];
 
   // Define routes accessible only to authenticated users
@@ -43,10 +48,6 @@ const Routes = () => {
       path: "/",
       element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
       children: [
-        {
-            path: "/profile",
-            element: <div>User Profile</div>,
-        },
         {
             path: "/logout",
             element: <Logout />,

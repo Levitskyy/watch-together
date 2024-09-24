@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'rc-slider/assets/index.css';
 import { replaceAnimeType } from './AnimeCard';
 import { serverURL } from '../App';
-import axios from 'axios';
+import axiosInstance from './axiosInstance';
 
 const GenresList = ({ genres, selectedGenres, onGenreChange, onBackClick }) => {
   return (
@@ -54,7 +54,7 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onKindChange, onM
   useEffect(() => {
     const fetchGenres = async () => {
       try {
-        const response = await axios.get(`http://${serverURL}/api/animes/genres`);
+        const response = await axiosInstance.get(`http://${serverURL}/api/animes/genres`);
         setGenres(response.data);
       } catch (error) {
         console.error('Error fetching genres:', error);
@@ -63,7 +63,7 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onKindChange, onM
   
     const fetchKinds = async () => {
       try {
-        const response = await axios.get(`http://${serverURL}/api/animes/kinds`);
+        const response = await axiosInstance.get(`http://${serverURL}/api/animes/kinds`);
         setKinds(response.data);
       } catch (error) {
         console.error('Error fetching kinds:', error);

@@ -7,7 +7,7 @@ class TokenData(BaseModel):
 
 class RefreshTokenBase(BaseModel):
     jti: str
-    expiration_date: datetime
+    expiration_date: datetime | None
     username: str
 
 class RefreshTokenWeb(RefreshTokenBase):

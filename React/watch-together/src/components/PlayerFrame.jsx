@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import { serverURL } from '../App';
-import axios from 'axios';
+import axiosInstance from './axiosInstance';
 
 const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpisodeUpdate, onToggle, onSeek }, ref) => {
     const [episodes, setEpisodes] = useState(null);
@@ -23,7 +23,7 @@ const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpiso
     const [initialPlayerHeight, setInitialPlayerHeight] = useState(0);
 
     useEffect(() => {
-        axios.get(`http://${serverURL}/api/episodes/title/${animeId}`)
+        axiosInstance.get(`http://${serverURL}/api/episodes/title/${animeId}`)
             .then((response) => {
                 const data = response.data;
                 let filteredEpisodes = null;

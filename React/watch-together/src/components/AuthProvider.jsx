@@ -1,5 +1,6 @@
-import axios from "axios";
+import axiosInstance from "./axiosInstance";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { setTokenFunction } from "./axiosInstance";
 
 const AuthContext = createContext();
 
@@ -14,10 +15,11 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (token) {
-      axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+      axiosInstance.defaults.headers.common["Authorization"] = "Bearer " + token;
       localStorage.setItem('token',token);
+      console.log('Setted access token');
     } else {
-      delete axios.defaults.headers.common["Authorization"];
+      delete axiosInstance.defaults.headers.common["Authorization"];
       localStorage.removeItem('token')
     }
   }, [token]);
@@ -29,6 +31,8 @@ const AuthProvider = ({ children }) => {
     }),
     [token]
   );
+
+  setTokenFunction(setToken);
 
   // Provide the authentication context to the children components
   return (

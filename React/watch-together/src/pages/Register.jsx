@@ -1,6 +1,8 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import axiosInstance from '../components/axiosInstance';
+import { serverURL } from '../App';
 
 const Register = () => {
   const initialValues = {
@@ -15,9 +17,19 @@ const Register = () => {
     password: Yup.string().min(6, 'Пароль должен содержать минимум 6 символов').required('Это обязательное поле'),
   });
 
-  const handleSubmit = (values, { setSubmitting }) => {
-    console.log(values);
-    setSubmitting(false);
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const response = await axiosInstance.post(`http://${serverURL}/api/auth/register`, {
+        username: values.name,
+        email: values.email,
+        password: values.password,
+      },
+      );
+      setSubmitting(false);
+    }
+    catch(error) {
+      console.error('Error registering:', error);
+    }
   };
 
   return (
