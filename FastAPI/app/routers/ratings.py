@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from app.database import get_db
 from app.config import get_settings
 from app.models.rating import Rating
-from app.schemas.rating import RatingBase, AnimeRating
+from app.schemas.rating import RatingBase, AnimeRating, RateAnime
 from app.auth.utils import get_current_active_user
 from app.models.user import User
 import requests
@@ -32,13 +32,12 @@ async def get_anime_rating_and_count(anime_id: int,
     return AnimeRating(rating=round(rating[0], 2), voters_count=rating[1])
 
 @router.post('/rating/rate')
-async def rate_anime(anime_id: int,
-                     rating: int, 
+async def rate_anime(rating: RateAnime, 
                      user: Annotated[User, Depends(get_current_active_user)], 
                      db: Annotated[AsyncSession, Depends(get_db)] = None) -> bool:
     new_rating = Rating(user_id=user.id,
-                        anime_id=anime_id,
-                        rating=rating,
+                        anime_id=rating.anime_id,
+                        rating=rating.rating,
                         )
     try:
         db.add(new_rating)
@@ -48,10 +47,10 @@ async def rate_anime(anime_id: int,
     except IntegrityError:
         # user has already rated the anime
         await db.rollback()
-        query = select(Rating).where(and_(Rating.anime_id==anime_id, Rating.user_id==user.id))
+        query = select(Rating).where(and_(Rating.anime_id==rating.anime_id, Rating.user_id==user.id))
         new_rating = await db.execute(query)
         new_rating = new_rating.scalar()
-        new_rating.rating = rating
+        new_rating.rating = rating.rating
         await db.commit()
         await db.refresh(new_rating)
 

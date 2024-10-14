@@ -12,3 +12,7 @@ class RatingBase(BaseModel):
 class AnimeRating(BaseModel):
     rating: float
     voters_count: int
+
+class RateAnime(BaseModel):
+    anime_id: int
+    rating: int
