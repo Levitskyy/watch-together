@@ -72,7 +72,7 @@ const AnimeList = () => {
       }
 
       setAnimes(prev => append ? [...prev, ...data] : data);
-      skipRef.current += limit;
+      // skipRef.current += limit;
     } catch (error) {
       console.error('Error fetching animes:', error);
     } finally {
@@ -85,6 +85,10 @@ const AnimeList = () => {
     setLoading(true);
     fetchAnimes();
   }, []);
+
+  useEffect(() => {
+    skipRef.current = animes.length;
+  }, [animes]);
 
   useEffect(() => {
     if (hasDataLeft.value) {  // После того как hasDataLeft обновился на true, запускаем fetchAnimes
