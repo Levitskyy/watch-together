@@ -26,6 +26,9 @@ class Anime(Base):
     other_titles: Mapped[list[str] | None] = mapped_column(ARRAY(String))
     episodes: Mapped[list["AnimeEpisode"]] = relationship(back_populates="anime")
 
+    # Relationships
+    ratings = relationship('Rating', back_populates='anime')
+
 class AnimeEpisode(Base):
     __tablename__ = 'AnimeEpisodes'
     

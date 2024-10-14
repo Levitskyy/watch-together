@@ -1,6 +1,6 @@
 from datetime import datetime, UTC
 from sqlalchemy import String, func
-from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 from app.models.base import Base
 
 
@@ -18,3 +18,4 @@ class User(Base):
     updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), server_onupdate=func.now())
 
     # Relationships
+    ratings = relationship('Rating', back_populates='user')
