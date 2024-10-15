@@ -24,9 +24,10 @@ class Anime(Base):
     released_episodes: Mapped[int | None]
     total_episodes: Mapped[int | None]
     other_titles: Mapped[list[str] | None] = mapped_column(ARRAY(String))
-    episodes: Mapped[list["AnimeEpisode"]] = relationship(back_populates="anime")
-
+    
     # Relationships
+
+    episodes: Mapped[list["AnimeEpisode"]] = relationship(back_populates="anime")
     ratings = relationship('Rating', back_populates='anime')
 
 class AnimeEpisode(Base):

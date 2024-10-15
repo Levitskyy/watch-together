@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 import time
 
 from app import database
-from app.routers import movies, users, animes, episodes, rooms, ratings
+from app.routers import movies, users, animes, episodes, rooms, ratings, categories
 from app.auth.routes import router as auth_router
 from app.models.base import Base
 from fastapi_cache import FastAPICache
@@ -51,6 +51,7 @@ app.include_router(episodes.router, prefix='/episodes', tags=['episodes'])
 app.include_router(rooms.router, prefix='/room', tags=['rooms'])
 app.include_router(auth_router, prefix='/auth', tags=['auth'])
 app.include_router(ratings.router, prefix='/ratings', tags=['ratings'])
+app.include_router(categories.router, prefix='/categories', tags=['categories'])
 
 
 @app.middleware("http")
