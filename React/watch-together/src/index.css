@@ -26,3 +26,30 @@ code {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+@layer utilities {
+  html *::-webkit-scrollbar, .scrollbar::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  html *::-webkit-scrollbar-track {
+    background: #262626;
+    margin-right: 10px;
+    border: solid 3px transparent;
+  }
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+
+  html *::-webkit-scrollbar-thumb, .scrollbar::-webkit-scrollbar-thumb {
+    background: #404040;
+    border-radius: 100vh;
+    border: solid 3px transparent;
+  }
+
+  html *::-webkit-scrollbar-thumb:hover, .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #505050;
+  }
+}

@@ -6,7 +6,7 @@ import axiosInstance from './axiosInstance';
 
 const GenresList = ({ genres, selectedGenres, onGenreChange, onBackClick }) => {
   return (
-    <div className="w-full bg-neutral-800 text-white rounded-lg p-4 border border-slate-500">
+    <div className="w-full bg-neutral-800 text-white rounded-lg p-4 border border-slate-500 max-h-96 overflow-y-scroll scrollbar">
       <div className="flex justify-between items-center mb-4">
         <button
           className="bg-neutral-800 py-2 px-4 rounded text-xl text-neutral-400 mb-1 hover:bg-neutral-600 transition duration-300"
@@ -123,7 +123,7 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onKindChange, onM
   };
 
   return (
-    <div className="w-full md:w-1/4 bg-neutral-800 text-white rounded-lg shadow-md p-4">
+    <div className="h-fit w-full md:w-1/4 bg-neutral-800 text-white rounded-lg shadow-md p-4 sticky top-4">
       {showGenresList ? (
         <GenresList
           genres={genres}
@@ -132,7 +132,7 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onKindChange, onM
           onBackClick={() => setShowGenresList(false)}
         />
       ) : (
-        <>
+        <div className=''>
           <div className="flex justify-between items-center mb-4 border-b pb-2 border-slate-500">
             <button
                 className="bg-neutral-800 text-white py-2 px-4 rounded hover:bg-neutral-600 transition duration-300 w-full max-w-28"
@@ -224,7 +224,7 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onKindChange, onM
           >
             Применить
           </button>
-        </>
+        </div>
       )}
     </div>
   );

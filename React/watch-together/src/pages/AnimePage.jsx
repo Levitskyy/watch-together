@@ -27,6 +27,7 @@ const getRatingColor = (rating) => {
 const AnimePage = () => {
   const { id } = useParams();
   const [anime, setAnime] = useState(null);
+  const [categoryOpened, setCategoryOpened] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -61,6 +62,12 @@ const AnimePage = () => {
               <img src={friends} alt="friends" className="w-3 filter invert" />
               <span>Смотреть с друзьями</span>
             </a>
+            <div className='flex gap-2 justify-left w-full bg-neutral-600 py-1 pl-3 rounded mb-2 hover:bg-neutral-500 transition duration-300'>
+              <span className='w-11/12'>Добавить в категорию</span>
+              <button className="border-l px-2">
+                <b>+</b>
+              </button>
+            </div>
           </div>
         </div>
         <div className="w-2/3 bg-neutral-800 rounded p-6">
