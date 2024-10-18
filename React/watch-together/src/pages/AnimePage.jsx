@@ -6,6 +6,11 @@ import PlayerFrame from '../components/PlayerFrame';
 import { nanoid } from 'nanoid'
 import { serverURL } from '../App';
 import axiosInstance from '../components/axiosInstance';
+import { useAuth } from '../components/AuthProvider';
+
+const capitalize = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
 
 const mapStatusToRussian = (status) => {
   const statusMap = {
@@ -26,8 +31,11 @@ const getRatingColor = (rating) => {
 
 const AnimePage = () => {
   const { id } = useParams();
+  const { isAuthenticated } = useAuth();
   const [anime, setAnime] = useState(null);
   const [categoryOpened, setCategoryOpened] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [currentCategory, setCurrentCategory] = useState(null);
 
   useEffect(() => {
     if (id) {
@@ -39,10 +47,67 @@ const AnimePage = () => {
           console.error('Error fetching anime:', error);
         }
       };
+
+      const fetchMyCategory = async () => {
+        try {
+          const response = await axiosInstance.get(`http://${serverURL}/api/categories/my/${id}`);
+          setCurrentCategory(capitalize(response.data));
+        } catch (error) {
+          console.error('Error fetching my category:', error);
+        }
+      }
     
       fetchAnime();
+      if (isAuthenticated) {
+        fetchMyCategory();
+      }
     }
   }, [id]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axiosInstance.get(`http://${serverURL}/api/categories/all`);
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+}, []);
+
+  const handleCategoryShow = () => (
+    setCategoryOpened((prev) => !prev)
+  );
+
+  const categoryChangeHandler = (category) => {
+    return () => {
+      const categoryName = category;
+      const changeMyCategory = async (categoryName) => {
+        try {
+          const response = await axiosInstance.post(
+            `http://${serverURL}/api/categories/my/${id}`, 
+            {
+              category: categoryName,
+            },
+            {
+              withCredentials: true,
+              headers: {
+                  'Content-Type': 'application/json',
+              }
+            }
+          );
+          setCurrentCategory(capitalize(response.data));
+        } catch (error) {
+          console.error('Error changing my category:', error);
+        }
+      };
+      changeMyCategory(categoryName);
+      setCurrentCategory(categoryName);
+      setCategoryOpened(false);
+    };
+  };
 
   if (!anime) {
     return <div>Loading...</div>;
@@ -62,12 +127,24 @@ const AnimePage = () => {
               <img src={friends} alt="friends" className="w-3 filter invert" />
               <span>Смотреть с друзьями</span>
             </a>
-            <div className='flex gap-2 justify-left w-full bg-neutral-600 py-1 pl-3 rounded mb-2 hover:bg-neutral-500 transition duration-300'>
-              <span className='w-11/12'>Добавить в категорию</span>
-              <button className="border-l px-2">
-                <b>+</b>
+            <div className='flex gap-2 justify-left w-full bg-neutral-700 py-1 pl-3 rounded transition duration-300'>
+              <span className='w-11/12'>{currentCategory ? capitalize(currentCategory) : 'Выбрать категорию'}</span>
+              <button onClick={handleCategoryShow} className="border-l px-2 hover:bg-neutral-500 transition duration-100">
+                <svg class="svg-inline--fa fa-chevron-down fa-sm w-3" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg>
               </button>
             </div>
+            {categoryOpened && (
+              <div className='flex flex-col max-h-32 justify-left w-full bg-neutral-800 rounded overflow-y-scroll'>
+                <button onClick={categoryChangeHandler('Выбрать категорию')} className='bg-neutral-800 hover:bg-neutral-600 py-1 px-2 text-left'>
+                    <span className='text-red-600'><b className='text-xs'>X</b> Убрать</span>
+                  </button>
+                {categories.map((category) => (
+                  <button onClick={categoryChangeHandler(category)} className='bg-neutral-800 hover:bg-neutral-600 py-1 px-2 text-left'>
+                    {capitalize(category)}
+                  </button>
+                ))}
+            </div>
+            )}
           </div>
         </div>
         <div className="w-2/3 bg-neutral-800 rounded p-6">
@@ -79,38 +156,38 @@ const AnimePage = () => {
               <span className="text-xs ml-2 text-slate-200">({anime.shikimori_votes})</span>
             </div>
           </div>
-          <p className="text-slate-500 mb-4">{anime.description}</p>
+          <p className="text-slate-300 mb-4">{anime.description}</p>
           <div className="mb-4">
             <h2 className="text-xl font-semibold text-slate-200 mb-2">Альт. названия</h2>
-            <p className="text-slate-500">{anime.other_titles.join('; ')}</p>
+            <p className="text-slate-300">{anime.other_titles.join('; ')}</p>
           </div>
           <div className="mb-4">
             <h2 className="text-xl font-semibold text-slate-200 mb-2">Кол-во эпизодов</h2>
-            <p className="text-slate-500">{anime.released_episodes ? anime.released_episodes : anime.total_episode ? anime.total_episode : '?'}</p>
+            <p className="text-slate-300">{anime.released_episodes ? anime.released_episodes : anime.total_episode ? anime.total_episode : '?'}</p>
           </div>
           <div className="mb-4">
             <h2 className="text-xl font-semibold text-slate-200 mb-2">Жанры</h2>
-            <p className="text-slate-500">{anime.anime_genres.join(', ')}</p>
+            <p className="text-slate-300">{anime.anime_genres.join(', ')}</p>
           </div>
           <div className="mb-4">
             <h2 className="text-xl font-semibold text-slate-200 mb-2">Мин. возраст</h2>
-            <p className="text-slate-500">{anime.minimal_age ? anime.minimal_age : '?'}</p>
+            <p className="text-slate-300">{anime.minimal_age ? anime.minimal_age : '?'}</p>
           </div>
           <div className="mb-4">
             <h2 className="text-xl font-semibold text-slate-200 mb-2">Студии</h2>
-            <p className="text-slate-500">{anime.anime_studios.join(', ')}</p>
+            <p className="text-slate-300">{anime.anime_studios.join(', ')}</p>
           </div>
           <div className="mb-4">
             <h2 className="text-xl font-semibold text-slate-200 mb-2">Статус</h2>
-            <p className="text-slate-500">{mapStatusToRussian(anime.status)}</p>
+            <p className="text-slate-300">{mapStatusToRussian(anime.status)}</p>
           </div>
           <div className="mb-4">
             <h2 className="text-xl font-semibold text-slate-200 mb-2">Год выхода</h2>
-            <p className="text-slate-500">{anime.year}</p>
+            <p className="text-slate-300">{anime.year}</p>
           </div>
           <div className="mb-4">
             <h2 className="text-xl font-semibold text-slate-200 mb-2">Тип</h2>
-            <p className="text-slate-500">{replaceAnimeType(anime.anime_kind)}</p>
+            <p className="text-slate-300">{replaceAnimeType(anime.anime_kind)}</p>
           </div>
         </div>
       </div>

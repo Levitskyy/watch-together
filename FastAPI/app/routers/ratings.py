@@ -19,7 +19,7 @@ router = APIRouter()
 
 
 
-@router.get('/rating/{anime_id}')
+@router.get('/{anime_id}')
 async def get_anime_rating_and_count(anime_id: int,
                                 db: Annotated[AsyncSession, Depends(get_db)] = None) -> AnimeRating:
     query = select(func.avg(Rating.rating), func.count(Rating.rating)).where(Rating.anime_id==anime_id)
@@ -31,7 +31,7 @@ async def get_anime_rating_and_count(anime_id: int,
     
     return AnimeRating(rating=round(rating[0], 2), voters_count=rating[1])
 
-@router.post('/rating/rate')
+@router.post('/rate')
 async def rate_anime(rating: RateAnime, 
                      user: Annotated[User, Depends(get_current_active_user)], 
                      db: Annotated[AsyncSession, Depends(get_db)] = None) -> bool:

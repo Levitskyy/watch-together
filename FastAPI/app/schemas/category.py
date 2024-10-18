@@ -17,3 +17,6 @@ class UserAnimeCategory(BaseModel):
 
     class ConfigDict:
         from_attributes = True
+
+class CategoryPost(BaseModel):
+    category: str | None

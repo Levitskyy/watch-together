@@ -28,6 +28,7 @@ const AuthProvider = ({ children }) => {
       }
       else {
         setToken_();
+        window.location.reload();
         return true;
       }
     } catch (error) {
