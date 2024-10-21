@@ -7,6 +7,7 @@ import { nanoid } from 'nanoid'
 import { serverURL } from '../App';
 import axiosInstance from '../components/axiosInstance';
 import { useAuth } from '../components/AuthProvider';
+import RatingPopup from '../components/RatingPopup';
 
 const capitalize = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -36,6 +37,7 @@ const AnimePage = () => {
   const [categoryOpened, setCategoryOpened] = useState(false);
   const [categories, setCategories] = useState([]);
   const [currentCategory, setCurrentCategory] = useState(null);
+  const [ratingOpened, setRatingOpened] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -109,6 +111,10 @@ const AnimePage = () => {
     };
   };
 
+  const handleRatingClick = () => {
+    setRatingOpened((prev) => !prev);
+  };
+
   if (!anime) {
     return <div>Loading...</div>;
   }
@@ -150,11 +156,13 @@ const AnimePage = () => {
         <div className="w-2/3 bg-neutral-800 rounded p-6">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-3xl font-semibold text-slate-200">{anime.title}</h1>
-            <div className={`flex items-center ${getRatingColor(anime.shikimori_rating)} text-white px-2 py-1 rounded`}>
-              <span className="text-xl font-bold">★</span>
-              <span className="text-xl font-bold ml-1">{anime.shikimori_rating}</span>
-              <span className="text-xs ml-2 text-slate-200">({anime.shikimori_votes})</span>
-            </div>
+            <button onClick={handleRatingClick}>
+              <div className={`flex items-center ${getRatingColor(anime.shikimori_rating)} text-white px-2 py-1 rounded border-2 border-white border-opacity-0 hover:border-opacity-100`}>
+                <span className="text-xl font-bold">★</span>
+                <span className="text-xl font-bold ml-1">{anime.shikimori_rating}</span>
+                <span className="text-xs ml-2 text-slate-200">({anime.shikimori_votes})</span>
+              </div>
+            </button>
           </div>
           <p className="text-slate-300 mb-4">{anime.description}</p>
           <div className="mb-4">
@@ -170,7 +178,7 @@ const AnimePage = () => {
             <p className="text-slate-300">{anime.anime_genres.join(', ')}</p>
           </div>
           <div className="mb-4">
-            <h2 className="text-xl font-semibold text-slate-200 mb-2">Мин. возраст</h2>
+            <h2 className="text-xl font-semibold text-slate-200 mb-2">Возр. ограничение</h2>
             <p className="text-slate-300">{anime.minimal_age ? anime.minimal_age : '?'}</p>
           </div>
           <div className="mb-4">
@@ -194,6 +202,9 @@ const AnimePage = () => {
       <div className="container mx-auto flex justify-center w-3/4 bg-neutral-800 rounded mt-8" id="videoplayer">
         <PlayerFrame animeId={id} animeKind={anime.anime_kind} />
       </div>
+      {ratingOpened && (
+        <RatingPopup animeId={id} ratingClickHandler={handleRatingClick}/>
+      )}
     </div>
   );
 };

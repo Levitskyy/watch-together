@@ -203,6 +203,7 @@ const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpiso
                         id="kodik-player"
                         src={streamLink + '?translations=false'}
                         allowFullScreen
+                        allow='autoplay'
                     />
                 </div>
                 <div className="w-1/4 bg-neutral-800 rounded flex flex-col">
