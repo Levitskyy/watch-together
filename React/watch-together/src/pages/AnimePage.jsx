@@ -136,7 +136,7 @@ const AnimePage = () => {
             <div className='flex gap-2 justify-left w-full bg-neutral-700 py-1 pl-3 rounded transition duration-300'>
               <span className='w-11/12'>{currentCategory ? capitalize(currentCategory) : 'Выбрать категорию'}</span>
               <button onClick={handleCategoryShow} className="border-l px-2 hover:bg-neutral-500 transition duration-100">
-                <svg class="svg-inline--fa fa-chevron-down fa-sm w-3" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg>
+                <svg className="svg-inline--fa fa-chevron-down fa-sm w-3" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg>
               </button>
             </div>
             {categoryOpened && (
