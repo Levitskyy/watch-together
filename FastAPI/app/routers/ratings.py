@@ -55,3 +55,16 @@ async def rate_anime(rating: RateAnime,
         await db.refresh(new_rating)
 
         return True
+    
+@router.get('/my/{anime_id}')
+async def get_my_anime_rating(anime_id: int,
+                            user: Annotated[User, Depends(get_current_active_user)], 
+                            db: Annotated[AsyncSession, Depends(get_db)] = None) -> int:
+    query = select(Rating).where(and_(Rating.anime_id==anime_id, Rating.user_id==user.id))
+    rating = await db.execute(query)
+    rating = rating.scalar_one_or_none()
+
+    if not rating:
+        raise HTTPException(status_code=404, detail='Rating not found')
+    
+    return rating.rating

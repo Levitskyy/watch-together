@@ -1,9 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axiosInstance from './axiosInstance';
 import { serverURL } from '../App';
 
 const RatingPopup = ({ animeId, ratingClickHandler }) => {
   const [rating, setRating] = useState(0);
+  const [fetchedRating, setFetchedRating] = useState(null);
+
+  useEffect(() => {
+    const fetchMyRating = async () => {
+      try {
+        const response = await axiosInstance.get(
+          `http://${serverURL}/api/ratings/my/${animeId}`, 
+          {
+          },
+          {
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json',
+            }
+          }
+        );
+        if (response.status === 200) {
+          setFetchedRating(response.data);
+        } else {
+          setFetchedRating(null);
+        }
+      } catch (error) {
+        console.error('Error fetching rating:', error);
+      }
+    };
+    fetchMyRating();
+  }, []);
+
+  useEffect(() => {
+    if (fetchedRating) {
+      setRating(fetchedRating);
+    }
+  }, [fetchedRating]);
 
   const handleInnerClick = (e) => {
     e.stopPropagation();
@@ -17,7 +50,7 @@ const RatingPopup = ({ animeId, ratingClickHandler }) => {
     const changeMyRating = async () => {
       try {
         const response = await axiosInstance.post(
-          `http://${serverURL}/api/ratings/rate/`, 
+          `http://${serverURL}/api/ratings/rate`, 
           {
             anime_id: animeId,
             rating: rating
@@ -33,8 +66,10 @@ const RatingPopup = ({ animeId, ratingClickHandler }) => {
         console.error('Error changing rating:', error);
       }
     };
-    changeMyRating();
-    ratingClickHandler(animeId, rating);
+    if (rating > 0) {
+      changeMyRating();
+    }
+    ratingClickHandler();
   };
 
   return (
