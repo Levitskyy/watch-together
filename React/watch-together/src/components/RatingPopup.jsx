@@ -24,12 +24,17 @@ const RatingPopup = ({ animeId, ratingClickHandler }) => {
         );
         if (response.status === 200) {
           setFetchedRating(response.data);
+          setIsLoading(false);
         } else {
           setFetchedRating(null);
+          setIsLoading(false);
         }
-        setIsLoading(false);
       } catch (error) {
+        if (error.response.status === 404) {
+          setFetchedRating(null);
+        }
         console.error('Error fetching rating:', error);
+        setIsLoading(false);
       }
     };
     fetchMyRating();
