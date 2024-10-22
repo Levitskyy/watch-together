@@ -8,6 +8,7 @@ import { serverURL } from '../App';
 import axiosInstance from '../components/axiosInstance';
 import { useAuth } from '../components/AuthProvider';
 import RatingPopup from '../components/RatingPopup';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const capitalize = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -116,7 +117,11 @@ const AnimePage = () => {
   };
 
   if (!anime) {
-    return <div>Loading...</div>;
+    return (
+      <div className='w-full h-full bg-neutral-900'>
+        <LoadingSpinner/>
+      </div>
+    );
   }
 
   return (

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import { serverURL } from '../App';
 import axiosInstance from './axiosInstance';
+import LoadingSpinner from './LoadingSpinner';
 
 const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpisodeUpdate, onToggle, onSeek }, ref) => {
     const [episodes, setEpisodes] = useState(null);
@@ -13,6 +14,7 @@ const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpiso
     const [subCount, setSubCount] = useState(0);
     const [selectedTranslation, setSelectedTranslation] = useState(translation);
     const [translationEps, setTranslationEps] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const playerRef = useRef(null);
     const iframeRef = useRef(null);
@@ -23,6 +25,7 @@ const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpiso
     const [initialPlayerHeight, setInitialPlayerHeight] = useState(0);
 
     useEffect(() => {
+        setIsLoading(true);
         axiosInstance.get(`http://${serverURL}/api/episodes/title/${animeId}`)
             .then((response) => {
                 const data = response.data;
@@ -64,8 +67,13 @@ const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpiso
                 setUniqueSubs(uniqueSubsArray);
                 setVoiceCount(voiceSet.size);
                 setSubCount(subSet.size);
+                setIsLoading(false);
             })
-            .catch((error) => console.error('Error fetching episodes:', error));
+            .catch((error) => {
+                console.error('Error fetching episodes:', error)
+                setIsLoading(false);
+            });
+            
     }, [animeId, animeKind]);
 
     useEffect(() => {
@@ -191,6 +199,14 @@ const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpiso
         sendMessageToIframe,
         currentSeconds,
     }));
+
+    if (isLoading) {
+        return (
+            <div className="w-full">
+                <LoadingSpinner/>
+            </div>
+        );
+    }
 
     return (
         <div className="w-full">
