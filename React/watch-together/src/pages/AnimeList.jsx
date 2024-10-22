@@ -4,12 +4,8 @@ import Filter from '../components/Filter';
 import AnimeCard from '../components/AnimeCard';
 import { serverURL } from '../App';
 import axiosInstance from '../components/axiosInstance';
+import LoadingSpinner from '../components/LoadingSpinner';
 
-const LoadingSpinner = () => (
-  <div className="flex justify-center items-center h-screen">
-    <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
-  </div>
-);
 
 const AnimeList = () => {
   const [animes, setAnimes] = useState([]);
@@ -35,6 +31,9 @@ const AnimeList = () => {
       return
     };
     setIsFetching(true);
+    if (skipRef.current === 0) {
+      setLoading(true);
+    }
     try {
       const url = new URL(`http://${serverURL}/api/animes/filter`);
       Object.keys(params).forEach(key => {
