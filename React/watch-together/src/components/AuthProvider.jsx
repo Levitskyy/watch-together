@@ -56,7 +56,6 @@ const AuthProvider = ({ children }) => {
           console.error('Error refreshing access token: ', error);
         }
       }
-
       setIsAuthenticated(authStatus);
     }
     initConnect();

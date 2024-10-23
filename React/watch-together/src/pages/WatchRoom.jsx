@@ -43,10 +43,10 @@ const WatchRoom = () => {
     const token = localStorage.getItem("token");
     if (token) {
       let userName = null;
-      if (token) {
-        const decoded = jwtDecode(token);
-        userName = decoded.sub;
-      }
+      
+      const decoded = jwtDecode(token);
+      userName = decoded.sub;
+      
       if (userName) {
         setUserId(userName);
       }

@@ -41,6 +41,20 @@ const AnimePage = () => {
   const [ratingOpened, setRatingOpened] = useState(false);
 
   useEffect(() => {
+    const fetchMyCategory = async () => {
+      try {
+        const response = await axiosInstance.get(`http://${serverURL}/api/categories/my/${id}`);
+        setCurrentCategory(capitalize(response.data));
+      } catch (error) {
+        console.error('Error fetching my category:', error);
+      }
+    }
+    if (isAuthenticated) {
+      fetchMyCategory();
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
     if (id) {
       const fetchAnime = async () => {
         try {
@@ -50,20 +64,7 @@ const AnimePage = () => {
           console.error('Error fetching anime:', error);
         }
       };
-
-      const fetchMyCategory = async () => {
-        try {
-          const response = await axiosInstance.get(`http://${serverURL}/api/categories/my/${id}`);
-          setCurrentCategory(capitalize(response.data));
-        } catch (error) {
-          console.error('Error fetching my category:', error);
-        }
-      }
-    
       fetchAnime();
-      if (isAuthenticated) {
-        fetchMyCategory();
-      }
     }
   }, [id]);
 

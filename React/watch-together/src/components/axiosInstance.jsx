@@ -10,7 +10,8 @@ function createAxiosResponseInterceptor() {
         (response) => response,
         (error) => {
             // Reject promise if usual error
-            if (error.response.status !== 401) {
+            const refreshUrl = `http://${serverURL}/api/auth/refresh`;
+            if (error.response.status !== 401 || (error.response.status === 401 && error.config.url === refreshUrl)) {
                 return Promise.reject(error);
             }
             /*
@@ -41,6 +42,7 @@ function createAxiosResponseInterceptor() {
                 .catch((error2) => {
                     // Retry failed, clean up and reject the promise
                     setToken();
+                    window.location.href = '/login';
                     return Promise.reject(error2);
                 })
                 .finally(createAxiosResponseInterceptor); // Re-attach the interceptor by running the method
