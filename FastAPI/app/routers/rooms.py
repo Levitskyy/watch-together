@@ -60,6 +60,6 @@ async def websocket_room(websocket: WebSocket, roomId: str):
     except WebSocketDisconnect:
         logger.info(f"Client disconnected from {roomId}")
         roomsManager.disconnect(websocket, roomId)
-        await websocket.close()
+    
     except Exception as e:
         logger.error(f"Error in WebSocket connection: {e}")
