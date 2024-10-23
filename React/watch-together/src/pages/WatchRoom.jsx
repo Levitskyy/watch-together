@@ -3,6 +3,11 @@ import { useParams, useLocation } from 'react-router-dom';
 import PlayerFrame from "../components/PlayerFrame";
 import WebSocketClient from "../components/WebSocketClient";
 import { serverURL } from "../App";
+import LoadingSpinner from "../components/LoadingSpinner";
+import { useAuth } from "../components/AuthProvider";
+import { jwtDecode } from "jwt-decode";
+import { nanoid } from 'nanoid'
+
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
@@ -10,6 +15,7 @@ function useQuery() {
 
 const WatchRoom = () => {
   const { roomId } = useParams();
+  const { isAuthenticated } = useAuth();
   const query = useQuery();
   const initAnimeId = query.get('animeId');
   const initAnimeKind = query.get('animeKind');
@@ -19,11 +25,42 @@ const WatchRoom = () => {
   const [selectedTranslation, setSelectedTranslation] = useState(null);
   const [link, setLink] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [userId, setUserId] = useState("");
 
   const playerRef = useRef(null);
+  const userIdRef = useRef(null);
   const socketClientRef = useRef(null);
   const lastCallTimeRef = useRef(0);
   const lastToggleTimeRef = useRef(0);
+  const lastStateTimeRef = useRef(0);
+
+  function addIdToMessage(data) {
+    data = { ...data, "user_id": userIdRef.current};
+    return data;
+  };
+
+  const updateId = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      let userName = null;
+      if (token) {
+        const decoded = jwtDecode(token);
+        userName = decoded.sub;
+      }
+      if (userName) {
+        setUserId(userName);
+      }
+    } else {
+      const user_id = localStorage.getItem("user_id");
+      if (user_id) {
+        setUserId(user_id);
+      } else {
+        const new_user_id = nanoid();
+        localStorage.setItem("user_id", new_user_id);
+        setUserId(new_user_id);
+      }
+    }
+  };
 
   const sendMessageToServer = (message) => {
     if (socketClientRef.current) {
@@ -39,23 +76,34 @@ const WatchRoom = () => {
 
   const episodeUpdateHandler = (data) => {
     data = {event: 'episodeUpdate', value: data};
+    data = addIdToMessage(data);
     const JSONdata = JSON.stringify(data);
     sendMessageToServer(JSONdata);
   };
 
   const handlePlayerToggle = (data) => {
+    data = addIdToMessage(data);
     const JSONdata = JSON.stringify(data);
     sendMessageToServer(JSONdata);
   };
 
   const handlePlayerSeek = (data) => {
+    data = addIdToMessage(data);
     const JSONdata = JSON.stringify(data);
     sendMessageToServer(JSONdata);
   };
 
+  // useEffect(() => {
+    
+  // }, []);
+
+  useEffect(() => {
+    userIdRef.current = userId
+  }, [userId]);
+
   useEffect(() => {
     socketClientRef.current = new WebSocketClient(`ws://${serverURL}/api/room/${roomId}`);
-
+    updateId();
     socketClientRef.current.setOnMessageCallback((message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
       let data = null;
@@ -97,10 +145,15 @@ const WatchRoom = () => {
           }
         }
         else if (data.event === 'state') {
-          setAnimeId(data.value.animeId);
-          setAnimeKind(data.value.animeKind);
-          setSelectedTranslation(data.value.translation);
-          setLink(data.value.link);
+
+          const timeSinceLastCall = currentTime - lastStateTimeRef.current;
+
+          if (timeSinceLastCall >= 300) {
+            setAnimeId(data.value.animeId);
+            setAnimeKind(data.value.animeKind);
+            setSelectedTranslation(data.value.translation);
+            setLink(data.value.link);
+          }
         }
       }
     });
@@ -125,7 +178,9 @@ const WatchRoom = () => {
 
   if (!animeId || !animeKind) {
     return (
-      <div>Loading...</div>
+      <div className="w-full h-full bg-neutral-800">
+        <LoadingSpinner/>
+      </div>
     );
   }
 

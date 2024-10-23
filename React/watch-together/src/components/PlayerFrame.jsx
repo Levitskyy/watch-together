@@ -200,14 +200,6 @@ const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpiso
         currentSeconds,
     }));
 
-    if (isLoading) {
-        return (
-            <div className="w-full">
-                <LoadingSpinner/>
-            </div>
-        );
-    }
-
     return (
         <div className="w-full">
             <div className="flex justify-left w-full">
