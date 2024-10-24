@@ -22,7 +22,7 @@ const AnimeCard = ({ id, title, rating, poster_url, anime_kind }) => {
 
   return (
     <Link to={`/anime/${id}`} className="flex flex-col rounded overflow-hidden m-1 relative text-white w-40 p-2">
-      <div className="relative aspect-w-2 aspect-h-3">
+      <div className="relative">
         <img className="w-full h-56 rounded-lg" src={poster_url} alt={title} />
         <div className={`absolute top-1 left-1 ${ratingBackgroundColor} ${ratingTextColor} px-1 py-0.5 rounded text-xs font-bold`}>
           {roundedRating} ⭐

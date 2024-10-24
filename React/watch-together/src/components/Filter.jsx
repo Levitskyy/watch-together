@@ -123,7 +123,7 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onKindChange, onM
   };
 
   return (
-    <div className="h-fit w-full md:w-1/4 bg-neutral-800 text-white rounded-lg shadow-md p-4 sticky top-4">
+    <div className="h-fit w-full xl:w-1/4 bg-neutral-800 text-white rounded-lg shadow-md p-4 xl:sticky xl:top-4">
       {showGenresList ? (
         <GenresList
           genres={genres}
@@ -133,7 +133,7 @@ const Filter = ({ onGenreChange, onYearChange, onRatingChange, onKindChange, onM
         />
       ) : (
         <div className=''>
-          <div className="flex justify-between items-center mb-4 border-b pb-2 border-slate-500">
+          <div className="flex flex-row justify-between items-center mb-4 border-b pb-2 border-slate-500">
             <button
                 className="bg-neutral-800 text-white py-2 px-4 rounded hover:bg-neutral-600 transition duration-300 w-full max-w-28"
                 onClick={() => setShowGenresList(true)}

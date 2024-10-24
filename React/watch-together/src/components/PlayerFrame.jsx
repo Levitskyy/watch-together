@@ -110,17 +110,30 @@ const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpiso
     }, [streamLink]);
 
     useEffect(() => {
-        if (playerRef.current && translationsRef.current) {
-            const playerHeight = playerRef.current.clientHeight;
-            const buttonContainerHeight = buttonContainerRef.current.clientHeight;
-
-            if (initialPlayerHeight === 0) {
-                setInitialPlayerHeight(playerHeight);
+        const handleResize = () => {
+            if (translationsRef.current && buttonContainerRef.current) {
+                const windowWidth = window.innerWidth;
+                const buttonContainerHeight = buttonContainerRef.current.clientHeight;
+    
+                // Пример расчета максимальной высоты на основе ширины окна
+                const maxHeight = windowWidth * 0.313; // Пример: максимальная высота равна половине ширины окна
+    
+                translationsRef.current.style.maxHeight = `${maxHeight - buttonContainerHeight}px`;
             }
-
-            translationsRef.current.style.maxHeight = `${initialPlayerHeight - buttonContainerHeight}px`;
-        }
-    }, [episodes, initialPlayerHeight]);
+        };
+    
+        // Вызов handleResize при монтировании компонента
+        handleResize();
+    
+        // Добавление обработчика события resize
+        window.addEventListener('resize', handleResize);
+    
+        // Удаление обработчика события resize при размонтировании компонента
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [episodes]);
+    
 
     useEffect(() => {
         if (episodes) {
@@ -215,9 +228,9 @@ const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpiso
                     />
                 </div>
                 <div className="w-1/4 bg-neutral-800 rounded flex flex-col">
-                    <div className="w-full flex items-center" ref={buttonContainerRef}>
+                    <div className="w-full flex flex-col items-center lg:flex-row" ref={buttonContainerRef}>
                         <button
-                            className={`border-r text-white py-2 px-4 hover:bg-neutral-600 transition duration-300 w-1/2 ${
+                            className={`lg:border-r text-white py-2 px-4 hover:bg-neutral-600 transition duration-300 w-full lg:w-1/2 ${
                                 showVoiceList ? 'bg-neutral-600' : 'bg-neutral-800'
                             }`}
                             onClick={() => {
@@ -231,7 +244,7 @@ const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpiso
                             </div>
                         </button>
                         <button
-                            className={`text-white py-2 px-4 hover:bg-neutral-600 transition duration-300 w-1/2 ${
+                            className={`border-b-4 lg:border-b-0 text-white py-2 px-4 hover:bg-neutral-600 transition duration-300 w-full lg:w-1/2 ${
                                 showSubList ? 'bg-neutral-600' : 'bg-neutral-800'
                             }`}
                             onClick={() => {
@@ -245,7 +258,7 @@ const PlayerFrame = forwardRef(({ animeId, animeKind, translation, link, onEpiso
                             </div>
                         </button>
                     </div>
-                    <div className="flex-grow overflow-y-scroll" ref={translationsRef}>
+                    <div className="flex-grow overflow-y-scroll text-sm md:text-base" ref={translationsRef}>
                         {showVoiceList && (
                             <div>
                                 {uniqueVoices.map((voice) => (

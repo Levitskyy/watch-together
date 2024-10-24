@@ -164,7 +164,7 @@ const AnimeList = () => {
       {loading ? (
         <LoadingSpinner />
       ) : (
-        <div className="container mx-auto p-4 flex flex-col md:flex-row gap-4 w-2/3">
+        <div className="container mx-auto p-4 flex flex-col-reverse xl:flex-row gap-4 w-2/3">
           <div className="flex-grow bg-neutral-800 rounded-lg shadow-md p-4 min-h-screen pr-4">
             <h1 className="text-2xl text-neutral-400 mb-3">Каталог</h1>
             <div className="relative flex mb-2">
@@ -201,7 +201,7 @@ const AnimeList = () => {
                 <option value="title_asc" className="text-neutral-400 text-base">Название (по возрастанию)</option>
               </select>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-4">
               {animes.map((anime, index) => (
                 <AnimeCard
                   key={index}
