@@ -9,10 +9,7 @@ import axiosInstance from '../components/axiosInstance';
 import { useAuth } from '../components/AuthProvider';
 import RatingPopup from '../components/RatingPopup';
 import LoadingSpinner from '../components/LoadingSpinner';
-
-const capitalize = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-};
+import { capitalize } from '../utils/utils';
 
 const mapStatusToRussian = (status) => {
   const statusMap = {

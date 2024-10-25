@@ -2,6 +2,8 @@ from datetime import datetime, UTC
 from sqlalchemy import String, func
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 from app.models.base import Base
+from app.models.rating import Rating
+from app.models.category import UserAnimeCategory
 
 
 class User(Base):
@@ -18,4 +20,5 @@ class User(Base):
     updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), server_onupdate=func.now())
 
     # Relationships
-    ratings = relationship('Rating', back_populates='user')
+    ratings: Mapped[list["Rating"]] = relationship(back_populates='user')
+    userAnimeCategories: Mapped[list["UserAnimeCategory"]] = relationship(back_populates='user')

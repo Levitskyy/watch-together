@@ -2,6 +2,8 @@ from sqlalchemy.orm import mapped_column, Mapped, relationship
 from sqlalchemy.types import String, ARRAY
 from sqlalchemy import ForeignKey
 from app.models.base import Base
+from app.models.rating import Rating
+from app.models.category import UserAnimeCategory
 
 
 class Anime(Base):
@@ -28,7 +30,8 @@ class Anime(Base):
     # Relationships
 
     episodes: Mapped[list["AnimeEpisode"]] = relationship(back_populates="anime")
-    ratings = relationship('Rating', back_populates='anime')
+    ratings: Mapped[list["Rating"]] = relationship(back_populates='anime')
+    userAnimeCategories: Mapped[list["UserAnimeCategory"]] = relationship(back_populates='anime')
 
 class AnimeEpisode(Base):
     __tablename__ = 'AnimeEpisodes'

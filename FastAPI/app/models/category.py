@@ -27,3 +27,5 @@ class UserAnimeCategory(Base):
 
     # relationship
     category: Mapped["Category"] = relationship(back_populates='userAnimeCategory')
+    user = relationship('User', back_populates='userAnimeCategories')
+    anime = relationship('Anime', back_populates='userAnimeCategories')

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from app.schemas.episode import AnimeEpisodeBase
 
 class AnimeBase(BaseModel):
@@ -19,6 +19,8 @@ class AnimeBase(BaseModel):
     released_episodes: int | None
     total_episodes: int | None
     other_titles: list[str] | None
+
+    model_config = ConfigDict(from_attributes=True)
     
 
 class AnimeWithEpisodes(AnimeBase):
@@ -26,3 +28,8 @@ class AnimeWithEpisodes(AnimeBase):
 
     class ConfigDict:
         from_attributes = True
+
+class MarkedAnime(BaseModel):
+    anime: AnimeBase
+    category: str | None
+    rating: int | None
