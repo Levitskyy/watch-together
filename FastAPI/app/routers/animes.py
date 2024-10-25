@@ -7,7 +7,7 @@ from app.database import get_db
 from app.config import get_settings
 from app.models.movie import Anime, AnimeEpisode
 from app.models.user import User
-from app.models.category import UserAnimeCategory
+from app.models.category import UserAnimeCategory, Category
 from app.models.rating import Rating
 from app.schemas.movie import AnimeBase, MarkedAnime
 from app.auth.utils import get_current_active_user
@@ -156,19 +156,14 @@ async def get_my_marked_animes(
     db: Annotated[AsyncSession, Depends(get_db)],
 ) -> list[MarkedAnime]:
     query = (
-        select(Anime, UserAnimeCategory, Rating)
-        .join(UserAnimeCategory, UserAnimeCategory.anime_id == Anime.id)
-        .join(Rating, Rating.anime_id == Anime.id)
+        select(Anime, Category, Rating)
+        .outerjoin(UserAnimeCategory, and_(UserAnimeCategory.anime_id == Anime.id, UserAnimeCategory.user_id == user.id))
+        .outerjoin(Rating, and_(Rating.anime_id == Anime.id, Rating.user_id == user.id))
+        .outerjoin(Category, Category.id == UserAnimeCategory.category_id)
         .where(
             or_(
-                UserAnimeCategory.category_id is not None,
-                and_(Rating.rating is not None, Rating.rating > 0)
-            )
-        )
-        .where(
-            or_(
-                UserAnimeCategory.user_id == user.id,
-                Rating.user_id == user.id
+                UserAnimeCategory.category_id.isnot(None),
+                and_(Rating.rating.isnot(None), Rating.rating > 0)
             )
         )
     )
@@ -177,12 +172,12 @@ async def get_my_marked_animes(
 
     anime_list = []
     for row in result.fetchall():
-        anime, user_anime_category, rating = row
+        anime, category, rating = row
         anime_data = AnimeBase.model_validate(anime)
         anime_list.append(
             MarkedAnime(
                 anime=anime_data,
-                category=str(user_anime_category.category_id) if user_anime_category else None,
+                category=category.name if category else None,
                 rating=rating.rating if rating else None,
             )
         )
