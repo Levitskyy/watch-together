@@ -156,7 +156,7 @@ async def get_my_marked_animes(
     db: Annotated[AsyncSession, Depends(get_db)],
 ) -> list[MarkedAnime]:
     query = (
-        select(Anime, Category, Rating)
+        select(Anime, Category, Rating, UserAnimeCategory)
         .outerjoin(UserAnimeCategory, and_(UserAnimeCategory.anime_id == Anime.id, UserAnimeCategory.user_id == user.id))
         .outerjoin(Rating, and_(Rating.anime_id == Anime.id, Rating.user_id == user.id))
         .outerjoin(Category, Category.id == UserAnimeCategory.category_id)
@@ -172,13 +172,14 @@ async def get_my_marked_animes(
 
     anime_list = []
     for row in result.fetchall():
-        anime, category, rating = row
+        anime, category, rating, user_anime_category = row
         anime_data = AnimeBase.model_validate(anime)
         anime_list.append(
             MarkedAnime(
                 anime=anime_data,
                 category=category.name if category else None,
                 rating=rating.rating if rating else None,
+                updated_at=user_anime_category.updated_at if user_anime_category else None,
             )
         )
 

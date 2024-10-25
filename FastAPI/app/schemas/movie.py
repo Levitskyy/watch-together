@@ -1,5 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 from app.schemas.episode import AnimeEpisodeBase
+from datetime import datetime
 
 class AnimeBase(BaseModel):
     id: int
@@ -33,3 +34,4 @@ class MarkedAnime(BaseModel):
     anime: AnimeBase
     category: str | None
     rating: int | None
+    updated_at: datetime | None

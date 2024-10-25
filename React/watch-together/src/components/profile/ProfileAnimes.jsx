@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { capitalize } from "../../utils/utils";
+import axiosInstance from "../axiosInstance";
+import { serverURL } from "../../App";
 
 const CategoryButton = ({ clickHandler, text, isActive }) => {
     return (
@@ -32,12 +34,34 @@ const ProfileAnimes = () => {
     //     rating: '',
     // }
 
+    useEffect(() => {
+        const fetchMarkedAnimes = async () => {
+            try {
+                const response = await axiosInstance.get(`http://${serverURL}/api/animes/my/marked`);
+                if (!response) {
+                    console.error('Error getting marked animes');
+                } else {
+                    const data = response.data;
+                    setAnimeDict(data);
+                }
+            } catch (error) {
+                console.error('Error getting marked animes:', error);
+            }
+        };
+
+        fetchMarkedAnimes();
+    }, []);
+
+    useEffect(() => {
+        console.log(animeDict);
+    }, [animeDict]);
+
     const handleCategoryClick = (category) => {
         setCurrentCategory(category);
     };
 
     return (
-        <div className="">
+        <div className="flex gap-2">
             <div className="flex flex-col w-1/6 p-2 rounded bg-neutral-800">
                 {statusList.map((category) => (
                     <CategoryButton
@@ -46,6 +70,9 @@ const ProfileAnimes = () => {
                         isActive={currentCategory === category.en}
                     />
                 ))}
+            </div>
+            <div className="flex flex-col w-5/6 p-2 rounded bg-neutral-800">
+                
             </div>
         </div>
     );
