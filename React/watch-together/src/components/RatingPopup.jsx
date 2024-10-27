@@ -80,6 +80,26 @@ const RatingPopup = ({ animeId, ratingClickHandler }) => {
     ratingClickHandler();
   };
 
+  const handleDeleteRating = () => {
+    const deleteMyRating = async () => {
+      try {
+        const response = await axiosInstance.delete(
+          `http://${serverURL}/api/ratings/my/${animeId}`, 
+          {
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'application/json',
+            }
+          }
+        );
+      } catch (error) {
+        console.error('Error deleting rating:', error);
+      }
+    };
+    deleteMyRating();
+    ratingClickHandler();
+  };
+
   return (
     <div onClick={ratingClickHandler} className="w-screen h-screen bg-black bg-opacity-50 fixed top-0 right-0 flex justify-center items-center">
       {isLoading ? (
@@ -105,9 +125,15 @@ const RatingPopup = ({ animeId, ratingClickHandler }) => {
           </div>
           <button
             onClick={handleSubmitRating}
-            className="bg-green-500 text-white px-4 py-2 rounded"
+            className="bg-green-500 text-white px-4 py-2 rounded mb-4"
           >
             Отправить оценку
+          </button>
+          <button
+            onClick={handleDeleteRating}
+            className="bg-red-500 text-white px-4 py-2 rounded"
+          >
+            Удалить оценку
           </button>
         </div>
       )}

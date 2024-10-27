@@ -68,3 +68,16 @@ async def get_my_anime_rating(anime_id: int,
         raise HTTPException(status_code=404, detail='Rating not found')
     
     return rating.rating
+
+@router.delete('/my/{anime_id}')
+async def delete_my_anime_rating(anime_id: int,
+                            user: Annotated[User, Depends(get_current_active_user)], 
+                            db: Annotated[AsyncSession, Depends(get_db)] = None) -> bool:
+    query = delete(Rating).where(and_(Rating.anime_id==anime_id, Rating.user_id==user.id))
+    rating = await db.execute(query)
+    await db.commit()
+
+    if not rating:
+        raise HTTPException(status_code=404, detail='Rating not found')
+    
+    return True
