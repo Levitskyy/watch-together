@@ -120,13 +120,15 @@ const ProfileAnimes = () => {
                 return (asc === 'asc' ? c : -c);
             }
             if (sortName === 'name') {
-                const c = (a.anime.title - b.anime.title);
+                const c = ('' + a.anime.title.localeCompare(b.anime.title));
                 console.log("name + " + c);
                 return (asc === 'asc' ? c : -c);
             }
+            // doesn't consider time, just date
             if (sortName === 'date') {
-                const c = (a.updated_at - b.updated_at);
-                console.log("date + " + c);
+                a = a.updated_at.split('T')[0].split('.').reverse().join('');
+                b = b.updated_at.split('T')[0].split('.').reverse().join('');
+                const c = a.localeCompare(b);
                 return (asc === 'asc' ? c : -c);
             }
         };
