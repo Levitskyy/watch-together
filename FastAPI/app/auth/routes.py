@@ -105,7 +105,8 @@ async def register_user(user: UserCreate, db: Annotated[AsyncSession, Depends(ge
     return {"message": "User registered successfully"}
 
 @router.post("/logout")
-async def logout_user(user: Annotated[User, Depends(get_current_active_user)],
+async def logout_user(response: Response,
+                      user: Annotated[User, Depends(get_current_active_user)],
                       db: Annotated[AsyncSession, Depends(get_db)]) -> bool:
     query = select(RefreshToken).where(RefreshToken.username == user.username)
     tokens = await db.execute(query)
@@ -118,5 +119,6 @@ async def logout_user(user: Annotated[User, Depends(get_current_active_user)],
         await db.rollback()
         return False
     else:
+        response.delete_cookie('refresh_token')
         return True
 
