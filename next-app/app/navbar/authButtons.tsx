@@ -12,7 +12,7 @@ export default async function AuthButtons() {
             {userName ? (
                 <div className="flex gap-5">
                     <Link href={`/user/${userName}`}>
-                        <div className="border-2 border-neutral-400 rounded p-2">
+                        <div className="border-2 border-neutral-400 rounded-lg p-2">
                             <span className="text-neutral-400">{userName}</span>
                         </div>
                     </Link>
@@ -21,12 +21,12 @@ export default async function AuthButtons() {
             ) : (
                 <div className="flex gap-5">
                     <Link href={`/login`}>
-                        <div className="border-2 border-neutral-400 rounded p-2">
+                        <div className="border-2 border-neutral-400 rounded-lg p-2">
                             <span className="text-neutral-400">Войти</span>
                         </div>
                     </Link>
                     <Link href={`/register`}>
-                        <div className="border-2 border-neutral-400 rounded p-2">
+                        <div className="border-2 border-neutral-400 rounded-lg p-2">
                             <span className="text-neutral-400">Регистрация</span>
                         </div>
                     </Link>
