@@ -36,6 +36,10 @@ export const replaceAnimeType = (animeType: string ): string => {
 export const addFiltersToQuery = (params: Partial<FilterParams>, url: string): string => {
     const filteredUrl = new URL(url);
     const limit = 20;
+    
+    if (params.page === undefined || params.page === null) {
+        params.page = 0;
+    }
 
     for (const key in params) {
         if (params.hasOwnProperty(key)) {
