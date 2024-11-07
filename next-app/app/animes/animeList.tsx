@@ -8,6 +8,7 @@ import Search from "./search";
 import { useSearchParams } from "next/navigation";
 import useInfiniteScroll from "react-infinite-scroll-hook";
 import useLoadItems from "./hooks";
+import Filter from "./filter";
 
 type AnimeListProps = {
     initAnimes: AnimePreviewParams[];
@@ -35,7 +36,6 @@ export default function AnimeList({ initAnimes, initFilterParams }: AnimeListPro
 
     return (
         <div className="flex flex-col">
-            <Search placeholder="Введите название аниме..."/>
             <div className="grid grid-cols-5 gap-4 justify-items-center">
                 {initAnimes.map((anime, index) => (
                     <AnimePreview
